@@ -1,284 +1,31 @@
 import {
   createColumnHelper,
+  FilterFn,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingFn,
+  sortingFns,
+  SortingState,
   useReactTable,
-} from "@tanstack/react-table";
-import React from "react";
-export const media_buyer = [
-  {
-    id: 1,
-    name: "Imee Francisco",
-    email: "imee@advista.io",
-    media_buyer_id: "usr9ICb5rmMOztPLe",
-    conversion_rate: 39.88,
-    total_cost: 10008.09,
-    clicks: 40498,
-    conversions: 16151,
-    impressions: 1682910,
-    ctr: 2.41,
-    cpm: 5.95,
-    cpc: 0.25,
-    cpa: 0.62,
-    revenue: 10135.62,
-    profit: 127.53,
-    roi: 1.27,
-  },
-  {
-    id: 2,
-    name: "Zyra",
-    email: "zyra@advista.io",
-    media_buyer_id: "usr7gwWAcdPepzqnn",
-    conversion_rate: 34.64,
-    total_cost: 18541.09,
-    clicks: 30097,
-    conversions: 10426,
-    impressions: 2331057,
-    ctr: 1.29,
-    cpm: 7.95,
-    cpc: 0.62,
-    cpa: 1.78,
-    revenue: 22660.43,
-    profit: 4119.34,
-    roi: 22.22,
-  },
-  {
-    id: 3,
-    name: "Ayran Sumile",
-    email: "ayran@advista.io",
-    media_buyer_id: "usr4nMe7T9MWX777G",
-    conversion_rate: 42.31,
-    total_cost: 6463.6,
-    clicks: 9141,
-    conversions: 3868,
-    impressions: 522677,
-    ctr: 1.75,
-    cpm: 12.37,
-    cpc: 0.71,
-    cpa: 1.67,
-    revenue: 6470.46,
-    profit: 6.86,
-    roi: 0.11,
-  },
-  {
-    id: 4,
-    name: "Nifil Najera",
-    email: "nifil@advista.io",
-    media_buyer_id: "usr5qG7TdIwqZJtzZ",
-    conversion_rate: 42.55,
-    total_cost: 15871.86,
-    clicks: 32265,
-    conversions: 13728,
-    impressions: 1391138,
-    ctr: 2.32,
-    cpm: 11.41,
-    cpc: 0.49,
-    cpa: 1.16,
-    revenue: 17658.37,
-    profit: 1786.51,
-    roi: 11.26,
-  },
-  {
-    id: 5,
-    name: "Elmo Sese",
-    email: "elmo@advista.io",
-    media_buyer_id: "usrKd9RrIuVV6eNCK",
-    conversion_rate: 47.05,
-    total_cost: 18562.8,
-    clicks: 28532,
-    conversions: 13425,
-    impressions: 1673015,
-    ctr: 1.71,
-    cpm: 11.1,
-    cpc: 0.65,
-    cpa: 1.38,
-    revenue: 20711.76,
-    profit: 2148.96,
-    roi: 11.58,
-  },
-  {
-    id: 6,
-    name: "Frank Picardal",
-    email: "frank@advista.io",
-    media_buyer_id: "usrMJARo3kio2edlY",
-    conversion_rate: 42.43,
-    total_cost: 23605.25,
-    clicks: 26686,
-    conversions: 11323,
-    impressions: 2090262,
-    ctr: 1.28,
-    cpm: 11.29,
-    cpc: 0.88,
-    cpa: 2.08,
-    revenue: 32563.23,
-    profit: 8957.98,
-    roi: 37.95,
-  },
-  {
-    id: 7,
-    name: "Mafar Kannapha",
-    email: "kannapha@advista.io",
-    media_buyer_id: "usrw0W2XpacMHf0Kl",
-    conversion_rate: 0,
-    total_cost: 0,
-    clicks: 0,
-    conversions: 0,
-    impressions: 0,
-    ctr: 0,
-    cpm: 0,
-    cpc: 0,
-    cpa: 0,
-    revenue: 5.13,
-    profit: 5.13,
-    roi: 0,
-  },
-  {
-    id: 8,
-    name: "Tanguy P",
-    email: "tanguy@advista.io",
-    media_buyer_id: "usrAMZ69DpANPKED3",
-    conversion_rate: 0,
-    total_cost: 0,
-    clicks: 0,
-    conversions: 0,
-    impressions: 0,
-    ctr: 0,
-    cpm: 0,
-    cpc: 0,
-    cpa: 0,
-    revenue: 0,
-    profit: 0,
-    roi: 0,
-  },
-  {
-    id: 10,
-    name: "Pedro Bender",
-    email: "pedro@advista.io",
-    media_buyer_id: "usrfd7jyk2gF7qCHS",
-    conversion_rate: 29.63,
-    total_cost: 3071.33,
-    clicks: 87827,
-    conversions: 26019,
-    impressions: 3403167,
-    ctr: 2.58,
-    cpm: 0.9,
-    cpc: 0.03,
-    cpa: 0.12,
-    revenue: 2063.85,
-    profit: -1007.48,
-    roi: -32.8,
-  },
-  {
-    id: 11,
-    name: "Nifil Najera",
-    email: "nifil@advista.io",
-    media_buyer_id: "usr5qG7TdIwqZJtzZ",
-    conversion_rate: 42.55,
-    total_cost: 15871.86,
-    clicks: 32265,
-    conversions: 13728,
-    impressions: 1391138,
-    ctr: 2.32,
-    cpm: 11.41,
-    cpc: 0.49,
-    cpa: 1.16,
-    revenue: 17658.37,
-    profit: 1786.51,
-    roi: 11.26,
-  },
-  {
-    id: 12,
-    name: "Elmo Sese",
-    email: "elmo@advista.io",
-    media_buyer_id: "usrKd9RrIuVV6eNCK",
-    conversion_rate: 47.05,
-    total_cost: 18562.8,
-    clicks: 28532,
-    conversions: 13425,
-    impressions: 1673015,
-    ctr: 1.71,
-    cpm: 11.1,
-    cpc: 0.65,
-    cpa: 1.38,
-    revenue: 20711.76,
-    profit: 2148.96,
-    roi: 11.58,
-  },
-  {
-    id: 13,
-    name: "Frank Picardal",
-    email: "frank@advista.io",
-    media_buyer_id: "usrMJARo3kio2edlY",
-    conversion_rate: 42.43,
-    total_cost: 23605.25,
-    clicks: 26686,
-    conversions: 11323,
-    impressions: 2090262,
-    ctr: 1.28,
-    cpm: 11.29,
-    cpc: 0.88,
-    cpa: 2.08,
-    revenue: 32563.23,
-    profit: 8957.98,
-    roi: 37.95,
-  },
-  {
-    id: 14,
-    name: "Mafar Kannapha",
-    email: "kannapha@advista.io",
-    media_buyer_id: "usrw0W2XpacMHf0Kl",
-    conversion_rate: 0,
-    total_cost: 0,
-    clicks: 0,
-    conversions: 0,
-    impressions: 0,
-    ctr: 0,
-    cpm: 0,
-    cpc: 0,
-    cpa: 0,
-    revenue: 5.13,
-    profit: 5.13,
-    roi: 0,
-  },
-  {
-    id: 15,
-    name: "Tanguy P",
-    email: "tanguy@advista.io",
-    media_buyer_id: "usrAMZ69DpANPKED3",
-    conversion_rate: 0,
-    total_cost: 0,
-    clicks: 0,
-    conversions: 0,
-    impressions: 0,
-    ctr: 0,
-    cpm: 0,
-    cpc: 0,
-    cpa: 0,
-    revenue: 0,
-    profit: 0,
-    roi: 0,
-  },
-  {
-    id: 16,
-    name: "Pedro Bender",
-    email: "pedro@advista.io",
-    media_buyer_id: "usrfd7jyk2gF7qCHS",
-    conversion_rate: 29.63,
-    total_cost: 3071.33,
-    clicks: 87827,
-    conversions: 26019,
-    impressions: 3403167,
-    ctr: 2.58,
-    cpm: 0.9,
-    cpc: 0.03,
-    cpa: 0.12,
-    revenue: 2063.85,
-    profit: -1007.48,
-    roi: -32.8,
-  },
-];
+} from '@tanstack/react-table';
+import React from 'react';
+import { DebouncedInput } from '~/components/DebouncedInput';
+import {
+  compareItems,
+  RankingInfo,
+  rankItem,
+} from '@tanstack/match-sorter-utils';
+import { clsx } from 'clsx';
+import { HiArrowUp } from 'react-icons/hi';
+import Pagination from '~/components/Pagination';
 
-type MediaBuyerType = {
+export type MediaBuyerType = {
   id: number;
   name: string;
   email: string;
@@ -297,74 +44,144 @@ type MediaBuyerType = {
   roi: number;
 };
 
-const MediaBuyer = () => {
+declare module '@tanstack/table-core' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>;
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo;
+  }
+}
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+  let dir = 0;
+
+  // Only sort by rank if the column has ranking information
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!,
+    );
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
+};
+type Props = {
+  media_buyer: MediaBuyerType[];
+};
+const MediaBuyer = ({ media_buyer }: Props) => {
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: 'totalCost',
+      desc: true,
+    },
+  ]);
   const columnHelper = createColumnHelper<MediaBuyerType>();
   const columns = [
-    columnHelper.display({
-      id: "name",
-      header: "Name",
+    columnHelper.accessor('name', {
+      header: 'Name',
       cell: (info) => {
         const { name } = info.row.original;
         return <div>{name}</div>;
       },
     }),
-    columnHelper.display({
-      id: "total_cost",
-      header: "Total Cost",
+    columnHelper.accessor('total_cost', {
+      id: 'totalCost',
+      header: 'Total Cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
         return <div>{total_cost}</div>;
       },
     }),
-    columnHelper.display({
-      id: "clicks",
-      header: "Clicks",
+    columnHelper.accessor('clicks', {
+      header: 'Clicks',
       cell: (info) => {
         const { clicks } = info.row.original;
         return <div>{clicks}</div>;
       },
     }),
-    columnHelper.display({
-      id: "conversion_rate",
-      header: "Conversion Rate",
+    columnHelper.accessor('conversion_rate', {
+      header: 'Conversion Rate',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
         return <div>{conversion_rate}</div>;
       },
     }),
-    columnHelper.display({
-      id: "cpa",
-      header: "CPA",
+    columnHelper.accessor('cpa', {
+      header: 'CPA',
       cell: (info) => {
         const { cpa } = info.row.original;
         return <div>{cpa}</div>;
       },
     }),
-    columnHelper.display({
-      id: "revenue",
-      header: "Revenue",
+    columnHelper.accessor('revenue', {
+      header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
         return <div>{revenue}</div>;
       },
     }),
-    columnHelper.display({
-      id: "profit",
-      header: "Profit",
+    columnHelper.accessor('profit', {
+      header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
         return <div>{profit}</div>;
       },
     }),
   ];
-
+  const [globalFilter, setGlobalFilter] = React.useState('');
   const table = useReactTable({
     data: media_buyer,
     columns,
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    state: {
+      sorting,
+      globalFilter,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
   return (
-    <div className="mt-8 flex flex-col">
+    <div className="mt-2 flex flex-col">
+      <section className="mt-5 mb-4 flex w-full">
+        <div className="w-full">
+          <label htmlFor="search-account" className="sr-only">
+            Search
+          </label>
+          <DebouncedInput
+            type="text"
+            name="search-account"
+            id="search-account"
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            placeholder="Search"
+            value={globalFilter ?? ''}
+            onChange={(value) => setGlobalFilter(String(value))}
+          />
+        </div>
+      </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -373,13 +190,34 @@ const MediaBuyer = () => {
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <th key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              className: clsx(
+                                {
+                                  'cursor-pointer select-none flex items-center gap-2':
+                                    header.column.getCanSort(),
+                                },
+                                'w-[300px]',
+                              ),
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
+                            {{
+                              asc: (
+                                <HiArrowUp className="h-5 w-5 transform text-slate-700 transition-all" />
+                              ),
+                              desc: (
+                                <HiArrowUp className="h-5 w-5 rotate-180 transform text-slate-700 transition-all" />
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        )}
                       </th>
                     ))}
                   </tr>
@@ -392,7 +230,7 @@ const MediaBuyer = () => {
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     ))}
@@ -402,6 +240,22 @@ const MediaBuyer = () => {
             </table>
           </div>
         </div>
+
+        <Pagination
+          from={
+            table.getState().pagination.pageIndex *
+              table.getState().pagination.pageSize +
+            1
+          }
+          to={
+            (table.getState().pagination.pageIndex + 1) *
+            table.getState().pagination.pageSize
+          }
+          totalItems={table.getPrePaginationRowModel().rows.length}
+          itemsPerPage={10}
+          currentPage={table.getState().pagination.pageIndex}
+          onPageChange={table.setPageIndex}
+        />
       </div>
     </div>
   );

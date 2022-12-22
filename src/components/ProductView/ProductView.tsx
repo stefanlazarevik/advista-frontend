@@ -1,12 +1,13 @@
-import { Tab } from '@headlessui/react';
 import { useState } from 'react';
-
+import { Tab } from '@headlessui/react';
 import Accounts from '../Accounts';
-
 import MediaBuyer from '~/components/Media Buyer/MediaBuyer';
 import Verticals from '~/components/Verticals/Verticals';
-
-const ProductView = () => {
+import { getProducts } from '~/services/productView/products';
+import { useQuery } from '@tanstack/react-query';
+import { getMediaBuyer } from '~/services/productView/mediabuyer';
+import { getVerticals } from '~/services/productView/verticals';
+const ProductView = ({ date }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   console.log('selectedIndex', selectedIndex);
   function classNames(...classes: any[]) {
@@ -17,6 +18,40 @@ const ProductView = () => {
     { name: 'Media Buyer', href: '#', current: false, value: 1 },
     { name: 'Verticals', href: '#', current: false, value: 2 },
   ];
+  const { startDate, endDate } = date;
+  const { queryKey: productKey, queryFn: productFn } = getProducts({
+    selectedTab: selectedIndex,
+    startDate: startDate,
+    endDate: endDate,
+  });
+  const { data: productData } = useQuery(productKey, productFn, {
+    retry: 1,
+    keepPreviousData: true,
+    enabled: selectedIndex === 0,
+  });
+  const { queryKey: mediaBuyerKey, queryFn: mediaBuyerFn } = getMediaBuyer({
+    selectTab: selectedIndex,
+    start_date: startDate,
+    end_date: endDate,
+  });
+  const { queryKey: verticalsKey, queryFn: verticalsFn } = getVerticals({
+    selectTab: selectedIndex,
+    start_date: startDate,
+    end_date: endDate,
+  });
+  const { data: mediaBuyerData } = useQuery(mediaBuyerKey, mediaBuyerFn, {
+    retry: 1,
+    keepPreviousData: true,
+    enabled: selectedIndex === 1,
+  });
+  const { data: verticalsData } = useQuery(verticalsKey, verticalsFn, {
+    retry: 1,
+    keepPreviousData: true,
+    enabled: selectedIndex === 2,
+  });
+  const media_buyer = mediaBuyerData?.results?.data;
+  const products = productData?.results?.data;
+  const verticals = verticalsData?.results?.data;
   return (
     <div className="px-2 pt-4 sm:px-0">
       <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
@@ -74,15 +109,15 @@ const ProductView = () => {
           </div>
         </div>
 
-        <Tab.Panels>
+        <Tab.Panels tabIndex={-1}>
           <Tab.Panel>
-            <Accounts />
+            {products ? <Accounts products={products} /> : null}
           </Tab.Panel>
-          <Tab.Panel>
-            <MediaBuyer />
+          <Tab.Panel tabIndex={-1}>
+            {media_buyer ? <MediaBuyer media_buyer={media_buyer} /> : null}
           </Tab.Panel>
-          <Tab.Panel>
-            <Verticals />
+          <Tab.Panel tabIndex={-1}>
+            {verticals != null ? <Verticals verticals={verticals} /> : null}
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
