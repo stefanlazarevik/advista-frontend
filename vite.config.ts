@@ -1,13 +1,12 @@
-import react from '@vitejs/plugin-react';
-import { defineConfig, loadEnv } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
-
+import react from "@vitejs/plugin-react";
+import { defineConfig, loadEnv } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import viteCompression from "vite-plugin-compression";
 export default defineConfig(({ command, mode, ssrBuild }) => {
-  //@ts-expect-error
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   return {
-    plugins: [react(), tsconfigPaths()],
+    plugins: [react(), tsconfigPaths(), viteCompression()],
     server: {
       port: 3000,
     },
@@ -15,7 +14,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       port: 3001,
     },
     define: {
-      'process.env': {},
+      "process.env": {},
     },
   };
 });

@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+*::before,
+*::after {
+	font-family: 'Montserrat', sans-serif;
+}
+@layer components {
+	.table_container {
+		@apply min-w-full table-fixed divide-y divide-gray-300;
+	}
+	.table_head {
+		@apply bg-gray-50;
+	}
+	.table_head th {
+		@apply py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6;
+	}
+	.table_body {
+		@apply divide-y divide-gray-200 bg-white;
+	}
+	.table_body td {
+		@apply whitespace-nowrap py-4 pl-4 pr-3 text-sm text-slate-700 sm:pl-6;
+	}
+	.table_body tr {
+		@apply odd:bg-slate-100 even:bg-white;
+	}
+}
