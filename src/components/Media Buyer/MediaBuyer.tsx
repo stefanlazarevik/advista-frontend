@@ -105,12 +105,8 @@ const MediaBuyer = ({ media_buyer }: Props) => {
       header: 'Total Cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
-        return (
-          <div>
-            {total_cost}&nbsp;
-            {info.row.original.currency}
-          </div>
-        );
+
+        return <div>{total_cost}&nbsp; EUR</div>;
       },
     }),
     columnHelper.accessor('clicks', {

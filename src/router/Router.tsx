@@ -1,5 +1,4 @@
 import React from 'react';
-import Loadable from 'react-loadable';
 import {
   createBrowserRouter,
   Navigate,
@@ -8,11 +7,9 @@ import {
 
 import LoadingPage from '~/components/LoadingPage';
 import Layout from '~/layouts';
-import Root from '~/routes/root';
-import ProductsDashboard from '~/screens/ProductsDashboard';
-import SignIn from '~/screens/SignIn';
 
 const AsyncDashboard = React.lazy(() => import('../screens/ProductsDashboard'));
+const AsyncSignIn = React.lazy(() => import('../screens/SignIn'));
 
 const router = createBrowserRouter([
   {
@@ -27,7 +24,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/sign-in',
-    element: <SignIn />,
+    element: (
+      <React.Suspense fallback={<LoadingPage />}>
+        <AsyncSignIn />
+      </React.Suspense>
+    ),
   },
   {
     path: '/dashboard',
