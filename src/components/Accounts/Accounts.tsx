@@ -210,10 +210,13 @@ const Accounts = ({ products }: Props) => {
                         {header.isPlaceholder ? null : (
                           <div
                             {...{
-                              className: clsx({
-                                'cursor-pointer select-none flex items-center gap-2':
-                                  header.column.getCanSort(),
-                              }),
+                              className: clsx(
+                                {
+                                  'cursor-pointer select-none flex items-center gap-2':
+                                    header.column.getCanSort(),
+                                },
+                                'group',
+                              ),
                               onClick: header.column.getToggleSortingHandler(),
                             }}
                           >
@@ -223,7 +226,7 @@ const Accounts = ({ products }: Props) => {
                             )}
                             {{
                               asc: (
-                                <span className="ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
+                                <span className=" ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
                                   <HiChevronDown
                                     className="h-5 w-5"
                                     aria-hidden="true"
@@ -238,7 +241,14 @@ const Accounts = ({ products }: Props) => {
                                   />
                                 </span>
                               ),
-                            }[header.column.getIsSorted() as string] ?? null}
+                            }[header.column.getIsSorted() as string] ?? (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible">
+                                <HiChevronDown
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            )}
                           </div>
                         )}
                       </th>

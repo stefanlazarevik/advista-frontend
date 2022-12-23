@@ -1,7 +1,9 @@
-import react from "@vitejs/plugin-react";
-import { defineConfig, loadEnv } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-import viteCompression from "vite-plugin-compression";
+import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
+import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from 'vite';
+import viteCompression from 'vite-plugin-compression';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
 export default defineConfig(({ command, mode, ssrBuild }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
@@ -14,7 +16,12 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       port: 3001,
     },
     define: {
-      "process.env": {},
+      'process.env': {},
+    },
+    build: {
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
     },
   };
 });

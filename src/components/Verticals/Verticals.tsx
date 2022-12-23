@@ -339,13 +339,17 @@ const Verticals = ({ verticals }: Props) => {
                         {header.isPlaceholder ? null : (
                           <div
                             {...{
-                              className: clsx({
-                                'cursor-pointer select-none flex items-center gap-2':
-                                  header.column.getCanSort(),
-                              }),
+                              className: clsx(
+                                {
+                                  'cursor-pointer select-none flex items-center gap-2 group':
+                                    header.column.getCanSort(),
+                                },
+                                'group',
+                              ),
                               onClick: header.column.getToggleSortingHandler(),
                             }}
                           >
+                            {}
                             {flexRender(
                               header.column.columnDef.header,
                               header.getContext(),
@@ -368,7 +372,14 @@ const Verticals = ({ verticals }: Props) => {
                                   />
                                 </span>
                               ),
-                            }[header.column.getIsSorted() as string] ?? null}
+                            }[header.column.getIsSorted() as string] ?? (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible">
+                                <HiChevronDown
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            )}
                           </div>
                         )}
                       </th>
