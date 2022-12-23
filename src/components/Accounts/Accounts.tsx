@@ -117,7 +117,12 @@ const Accounts = ({ products }: Props) => {
       id: 'totalCost',
       cell: (info) => {
         const { total_cost } = info.row.original;
-        return <div>{total_cost}</div>;
+        return (
+          <div>
+            {total_cost}&nbsp;
+            {info.row.original.currency}
+          </div>
+        );
       },
     }),
     columnHelper.accessor('clicks', {
@@ -145,14 +150,14 @@ const Accounts = ({ products }: Props) => {
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
-        return <div>{revenue}</div>;
+        return <div>{revenue} USD</div>;
       },
     }),
     columnHelper.accessor('profit', {
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
-        return <div>{profit}</div>;
+        return <div>{profit} USD</div>;
       },
     }),
   ];

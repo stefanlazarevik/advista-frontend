@@ -245,7 +245,7 @@ const Verticals = ({ verticals }: Props) => {
       id: 'totalCost',
       cell: (info) => {
         const { total_cost } = info.row.original;
-        return <div>{total_cost}</div>;
+        return <div>{total_cost}&nbsp; &nbsp; EUR</div>;
       },
     }),
     columnHelper.accessor('clicks', {
@@ -273,14 +273,14 @@ const Verticals = ({ verticals }: Props) => {
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
-        return <div>{revenue}</div>;
+        return <div>{revenue} USD</div>;
       },
     }),
     columnHelper.accessor('profit', {
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
-        return <div>{profit}</div>;
+        return <div>{profit} USD</div>;
       },
     }),
   ];
@@ -303,7 +303,7 @@ const Verticals = ({ verticals }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -405,7 +405,7 @@ const Verticals = ({ verticals }: Props) => {
           </div>
         </div>
 
-        <Pagination
+        {/* <Pagination
           from={
             table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +
@@ -419,7 +419,7 @@ const Verticals = ({ verticals }: Props) => {
           itemsPerPage={10}
           currentPage={table.getState().pagination.pageIndex}
           onPageChange={table.setPageIndex}
-        />
+        /> */}
       </div>
     </div>
   );

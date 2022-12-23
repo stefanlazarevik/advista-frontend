@@ -18,7 +18,7 @@ const ProductsDashboard = () => {
   return (
     <div className="py-10">
       <header>
-        <div className="mx-auto flex max-w-7xl justify-between px-4 sm:px-6 lg:px-8">
+        <div className="m mx-auto mb-2 flex max-w-7xl flex-wrap justify-center gap-4 px-4 sm:mb-0 sm:flex-nowrap sm:justify-between sm:px-6 lg:px-8">
           <div>
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
               Dashboard

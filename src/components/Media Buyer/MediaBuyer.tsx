@@ -43,6 +43,7 @@ export type MediaBuyerType = {
   revenue: number;
   profit: number;
   roi: number;
+  currency: string;
 };
 
 declare module '@tanstack/table-core' {
@@ -104,7 +105,12 @@ const MediaBuyer = ({ media_buyer }: Props) => {
       header: 'Total Cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
-        return <div>{total_cost}</div>;
+        return (
+          <div>
+            {total_cost}&nbsp;
+            {info.row.original.currency}
+          </div>
+        );
       },
     }),
     columnHelper.accessor('clicks', {
@@ -132,14 +138,14 @@ const MediaBuyer = ({ media_buyer }: Props) => {
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
-        return <div>{revenue}</div>;
+        return <div>{revenue} USD</div>;
       },
     }),
     columnHelper.accessor('profit', {
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
-        return <div>{profit}</div>;
+        return <div>{profit} USD</div>;
       },
     }),
   ];
@@ -160,7 +166,7 @@ const MediaBuyer = ({ media_buyer }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -185,7 +191,7 @@ const MediaBuyer = ({ media_buyer }: Props) => {
       </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="h-[30rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -260,7 +266,7 @@ const MediaBuyer = ({ media_buyer }: Props) => {
           </div>
         </div>
 
-        <Pagination
+        {/* <Pagination
           from={
             table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +
@@ -274,7 +280,7 @@ const MediaBuyer = ({ media_buyer }: Props) => {
           itemsPerPage={10}
           currentPage={table.getState().pagination.pageIndex}
           onPageChange={table.setPageIndex}
-        />
+        /> */}
       </div>
     </div>
   );
