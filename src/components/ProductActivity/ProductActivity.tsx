@@ -1,5 +1,6 @@
-import { getTotalReport } from '~/services/productActivity/totalReports';
 import { useQuery } from '@tanstack/react-query';
+
+import { getTotalReport } from '~/services/productActivity/totalReports';
 
 const stats = [
   { name: 'Profit', stat: '0.0k USD', key: 'profit' },
@@ -24,6 +25,7 @@ const ProductActivity = ({ date }: any) => {
     retry: 1,
     keepPreviousData: true,
   });
+
   return (
     <div>
       {/*<h3 className="text-lg font-medium leading-6 text-gray-900">*/}

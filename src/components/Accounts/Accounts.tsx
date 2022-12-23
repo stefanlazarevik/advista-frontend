@@ -22,7 +22,12 @@ import {
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
 import React from 'react';
-import { HiArrowUp, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import {
+  HiArrowUp,
+  HiChevronDown,
+  HiChevronLeft,
+  HiChevronRight,
+} from 'react-icons/hi';
 
 import { DebouncedInput } from '../DebouncedInput';
 import Pagination from '../Pagination';
@@ -170,7 +175,7 @@ const Accounts = ({ products }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
@@ -193,9 +198,9 @@ const Accounts = ({ products }: Props) => {
           />
         </div>
       </section>
-      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -205,13 +210,10 @@ const Accounts = ({ products }: Props) => {
                         {header.isPlaceholder ? null : (
                           <div
                             {...{
-                              className: clsx(
-                                {
-                                  'cursor-pointer select-none flex items-center gap-2':
-                                    header.column.getCanSort(),
-                                },
-                                'w-[300px]',
-                              ),
+                              className: clsx({
+                                'cursor-pointer select-none flex items-center gap-2':
+                                  header.column.getCanSort(),
+                              }),
                               onClick: header.column.getToggleSortingHandler(),
                             }}
                           >
@@ -221,10 +223,20 @@ const Accounts = ({ products }: Props) => {
                             )}
                             {{
                               asc: (
-                                <HiArrowUp className="h-5 w-5 transform text-slate-700 transition-all" />
+                                <span className="ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
+                                  <HiChevronDown
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
                               ),
                               desc: (
-                                <HiArrowUp className="h-5 w-5 rotate-180 transform text-slate-700 transition-all" />
+                                <span className="ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300">
+                                  <HiChevronDown
+                                    className="h-5 w-5 "
+                                    aria-hidden="true"
+                                  />
+                                </span>
                               ),
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
@@ -252,7 +264,7 @@ const Accounts = ({ products }: Props) => {
           </div>
         </div>
 
-        <Pagination
+        {/* <Pagination
           from={
             table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +
@@ -266,7 +278,7 @@ const Accounts = ({ products }: Props) => {
           itemsPerPage={10}
           currentPage={table.getState().pagination.pageIndex}
           onPageChange={table.setPageIndex}
-        />
+        /> */}
       </div>
     </div>
   );

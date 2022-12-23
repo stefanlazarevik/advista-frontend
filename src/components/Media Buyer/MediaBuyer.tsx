@@ -1,4 +1,9 @@
 import {
+  compareItems,
+  RankingInfo,
+  rankItem,
+} from '@tanstack/match-sorter-utils';
+import {
   createColumnHelper,
   FilterFn,
   flexRender,
@@ -14,15 +19,11 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import React from 'react';
-import { DebouncedInput } from '~/components/DebouncedInput';
-import {
-  compareItems,
-  RankingInfo,
-  rankItem,
-} from '@tanstack/match-sorter-utils';
 import { clsx } from 'clsx';
-import { HiArrowUp } from 'react-icons/hi';
+import React from 'react';
+import { HiArrowUp, HiChevronDown } from 'react-icons/hi';
+
+import { DebouncedInput } from '~/components/DebouncedInput';
 import Pagination from '~/components/Pagination';
 
 export type MediaBuyerType = {
@@ -184,7 +185,7 @@ const MediaBuyer = ({ media_buyer }: Props) => {
       </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -194,13 +195,10 @@ const MediaBuyer = ({ media_buyer }: Props) => {
                         {header.isPlaceholder ? null : (
                           <div
                             {...{
-                              className: clsx(
-                                {
-                                  'cursor-pointer select-none flex items-center gap-2':
-                                    header.column.getCanSort(),
-                                },
-                                'w-[300px]',
-                              ),
+                              className: clsx({
+                                'cursor-pointer select-none flex items-center gap-2':
+                                  header.column.getCanSort(),
+                              }),
                               onClick: header.column.getToggleSortingHandler(),
                             }}
                           >
@@ -208,12 +206,23 @@ const MediaBuyer = ({ media_buyer }: Props) => {
                               header.column.columnDef.header,
                               header.getContext(),
                             )}
+
                             {{
                               asc: (
-                                <HiArrowUp className="h-5 w-5 transform text-slate-700 transition-all" />
+                                <span className="ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
+                                  <HiChevronDown
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
                               ),
                               desc: (
-                                <HiArrowUp className="h-5 w-5 rotate-180 transform text-slate-700 transition-all" />
+                                <span className="ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300">
+                                  <HiChevronDown
+                                    className="h-5 w-5 "
+                                    aria-hidden="true"
+                                  />
+                                </span>
                               ),
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
