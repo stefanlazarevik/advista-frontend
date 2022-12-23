@@ -25,7 +25,11 @@ const ProductsDashboard = () => {
             </h1>
           </div>
           <div>
-            <Datepicker value={date} onChange={handleValueChange} />
+            <Datepicker
+              value={date}
+              onChange={handleValueChange}
+              containerClassName="z-20"
+            />
           </div>
         </div>
       </header>

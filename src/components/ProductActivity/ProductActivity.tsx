@@ -27,7 +27,7 @@ const ProductActivity = ({ date }: Props) => {
       stats.forEach((items) => {
         items.stat = `${Number(Number(total_repots[items?.key]) / 1000).toFixed(
           1,
-        )}  k USD`;
+        )}k USD`;
       });
       console.log({ stats });
     },
@@ -45,7 +45,7 @@ const ProductActivity = ({ date }: Props) => {
           <dt className="truncate text-sm font-medium text-gray-500">
             {item.name}
           </dt>
-          <dd className="mt-1 bg-gradient-to-r from-purple-700 to-pink-800 bg-clip-text text-3xl font-semibold tracking-tight text-transparent">
+          <dd className="mt-1 bg-gradient-to-r from-purple-700 to-pink-800 bg-clip-text text-3xl font-semibold uppercase tracking-tight text-transparent">
             {item.stat}
           </dd>
         </div>

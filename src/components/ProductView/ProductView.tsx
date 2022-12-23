@@ -1,11 +1,13 @@
-import { useState } from 'react';
 import { Tab } from '@headlessui/react';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+
 import Accounts from '../Accounts';
+
 import MediaBuyer from '~/components/Media Buyer/MediaBuyer';
 import Verticals from '~/components/Verticals/Verticals';
-import { getProducts } from '~/services/productView/products';
-import { useQuery } from '@tanstack/react-query';
 import { getMediaBuyer } from '~/services/productView/mediabuyer';
+import { getProducts } from '~/services/productView/products';
 import { getVerticals } from '~/services/productView/verticals';
 const ProductView = ({ date }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);

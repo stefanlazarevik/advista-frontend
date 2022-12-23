@@ -1,39 +1,47 @@
-import React from "react";
+import React from 'react';
+import Loadable from 'react-loadable';
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import Root from "~/routes/root";
-import SignIn from "~/screens/SignIn";
-import Layout from "~/layouts";
-import ProductsDashboard from "~/screens/ProductsDashboard";
+import LoadingPage from '~/components/LoadingPage';
+import Layout from '~/layouts';
+import Root from '~/routes/root';
+import ProductsDashboard from '~/screens/ProductsDashboard';
+import SignIn from '~/screens/SignIn';
+
+const AsyncDashboard = React.lazy(() => import('../screens/ProductsDashboard'));
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: (
-      <Layout>
-        <ProductsDashboard />
-      </Layout>
+      <React.Suspense fallback={<LoadingPage />}>
+        <Layout>
+          <AsyncDashboard />
+        </Layout>
+      </React.Suspense>
     ),
   },
   {
-    path: "/sign-in",
+    path: '/sign-in',
     element: <SignIn />,
   },
   {
-    path: "/dashboard",
+    path: '/dashboard',
     element: (
-      <Layout>
-        <ProductsDashboard />
-      </Layout>
+      <React.Suspense fallback={<LoadingPage />}>
+        <Layout>
+          <AsyncDashboard />
+        </Layout>
+      </React.Suspense>
     ),
   },
   {
-    path: "*",
-    element: <Navigate to={"/sign-in"}></Navigate>,
+    path: '*',
+    element: <Navigate to={'/sign-in'} />,
   },
 ]);
 
