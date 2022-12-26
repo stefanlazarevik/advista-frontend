@@ -10,6 +10,7 @@ import Layout from '~/layouts';
 
 const AsyncDashboard = React.lazy(() => import('../screens/ProductsDashboard'));
 const AsyncSignIn = React.lazy(() => import('../screens/SignIn'));
+const AsyncSignOut = React.lazy(() => import('../screens/SignUp/SignUp'));
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,14 @@ const router = createBrowserRouter([
     element: (
       <React.Suspense fallback={<LoadingPage />}>
         <AsyncSignIn />
+      </React.Suspense>
+    ),
+  },
+  {
+    path: '/sign-up',
+    element: (
+      <React.Suspense fallback={<LoadingPage />}>
+        <AsyncSignOut />
       </React.Suspense>
     ),
   },

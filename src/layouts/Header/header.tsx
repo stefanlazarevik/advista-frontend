@@ -1,6 +1,11 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { logoutUser } from '~/services/auth/auth';
+import { useMutation } from '@tanstack/react-query';
+import { deleteTokenInfo } from '~/lib/auth/authlib';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
@@ -23,6 +28,24 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }
 const Header = () => {
+  const router = useNavigate();
+  const { mutateAsync } = useMutation(logoutUser().queryFn, {
+    onSuccess: () => {
+      deleteTokenInfo();
+      router('/sign-in');
+    },
+  });
+
+  const handleLogOut = (title: string) => {
+    if (title === 'Sign out') {
+      toast.promise(mutateAsync(), {
+        loading: 'Logging out user',
+        success: 'User logged out successfully',
+        error: 'Failed to logout user',
+      });
+    }
+  };
+
   return (
     <>
       {/*
@@ -80,7 +103,7 @@ const Header = () => {
                     </button>
 
                     {/* Profile dropdown */}
-                    <Menu as="div" className="relative ml-3">
+                    <Menu as="div" className="bbbbbbbbbbbbbb relative ml-3">
                       <div>
                         <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
@@ -100,20 +123,32 @@ const Header = () => {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700',
-                                  )}
-                                >
-                                  {item.name}
-                                </a>
-                              )}
+                              {({ active }) =>
+                                item?.action ? (
+                                  <button
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block w-full px-4 py-2 text-left text-sm text-gray-700',
+                                    )}
+                                    onClick={() => handleLogOut(item?.name)}
+                                  >
+                                    {item?.name}
+                                  </button>
+                                ) : (
+                                  <a
+                                    href={item.href}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700',
+                                    )}
+                                  >
+                                    {item.name}
+                                  </a>
+                                )
+                              }
                             </Menu.Item>
                           ))}
                         </Menu.Items>

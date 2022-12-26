@@ -17,17 +17,3 @@ export const getUserProfile = () => {
     queryKey: ['self'],
   };
 };
-const { access_token } = getTokenInfo();
-export const logoutUser = () => {
-  return {
-    queryFn() {
-      const data = new FormData();
-      data.append('client_id', CLIENT_ID);
-      data.append('token', access_token);
-
-      return axios
-        .post(`${API_URL}/auth/revoke_token/`, data, {})
-        .then((response) => response.data);
-    },
-  };
-};
