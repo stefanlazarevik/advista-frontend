@@ -11,7 +11,6 @@
         aws_access_key: "{{aws_access_key}}"
         aws_secret_key: "{{aws_secret_key}}"
         bucket: "{{bucket}}"
-        permission: public-read
         region: us-east-1
         file_root: "./dist"
         cache_control: "public, max-age=100"
