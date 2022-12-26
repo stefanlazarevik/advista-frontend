@@ -1,0 +1,18 @@
+- hosts: localhost
+  vars:
+    aws_access_key: "AKIAXW4EXGVRIQD2PFUD"
+    aws_secret_key: "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"
+    bucket: "app.searchstats.live"
+  tasks:
+    - name: Build Project
+      command: npm run build
+    - name: Upload Files
+      s3_sync:
+        aws_access_key: "{{aws_access_key}}"
+        aws_secret_key: "{{aws_secret_key}}"
+        bucket: "{{bucket}}"
+        permission: public-read
+        region: us-east-1
+        file_root: "./dist"
+        cache_control: "public, max-age=100"
+        file_change_strategy: force
