@@ -34,6 +34,7 @@ import Pagination from '../Pagination';
 import TotalReport from '~/components/TotalReport';
 import totalReport from '~/components/TotalReport';
 import { TotalReportType } from '~/screens/ProductsDashboard';
+import { numberWithCommas } from '~/utils/common';
 
 export type Product = {
   id: number;
@@ -123,7 +124,7 @@ const Accounts = ({ products, accountsReport }: any) => {
         const { total_cost } = info.row.original;
         return (
           <div>
-            {total_cost}&nbsp;
+            {numberWithCommas(total_cost)}&nbsp;
             {info.row.original.currency}
           </div>
         );
@@ -133,35 +134,35 @@ const Accounts = ({ products, accountsReport }: any) => {
       header: 'Clicks',
       cell: (info) => {
         const { clicks } = info.row.original;
-        return <div>{clicks}</div>;
+        return <div>{numberWithCommas(clicks)}</div>;
       },
     }),
     columnHelper.accessor('conversion_rate', {
       header: 'Conversion Rate',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
-        return <div>{conversion_rate}</div>;
+        return <div>{numberWithCommas(conversion_rate)} %</div>;
       },
     }),
     columnHelper.accessor('cpa', {
       header: 'CPA',
       cell: (info) => {
         const { cpa } = info.row.original;
-        return <div>{cpa}</div>;
+        return <div>{numberWithCommas(cpa)}</div>;
       },
     }),
     columnHelper.accessor('revenue', {
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
-        return <div>{revenue} USD</div>;
+        return <div>{numberWithCommas(revenue)} USD</div>;
       },
     }),
     columnHelper.accessor('profit', {
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
-        return <div>{profit} USD</div>;
+        return <div>{numberWithCommas(profit)} USD</div>;
       },
     }),
   ];

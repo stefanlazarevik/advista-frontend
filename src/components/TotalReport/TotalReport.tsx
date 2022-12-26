@@ -1,3 +1,5 @@
+import { numberWithCommas } from '~/utils/common';
+
 const includeKeys = [
   'total_cost',
   'clicks',
@@ -23,6 +25,8 @@ const TotalReport = ({ data }: any) => {
             <th className="ml-5 text-left" key={index}>
               {item === 'total_cost' || item === 'revenue' || item === 'profit'
                 ? `${data[item]} USD`
+                : item === 'conversion_rate'
+                ? `${data[item]} %`
                 : data[item]}
             </th>
           ))}
