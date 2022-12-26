@@ -153,6 +153,7 @@ import {
 
 import { DebouncedInput } from '~/components/DebouncedInput';
 import Pagination from '~/components/Pagination';
+import TotalReport from '~/components/TotalReport';
 
 export type VerticalsType = {
   id: number;
@@ -223,7 +224,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 // type Props = {
 //   products: Product[];
 // };
-const Verticals = ({ verticals }: Props) => {
+const Verticals = ({ verticals, verticalsReport }: any) => {
   const columnHelper = createColumnHelper<VerticalsType>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -401,6 +402,7 @@ const Verticals = ({ verticals }: Props) => {
                   </tr>
                 ))}
               </tbody>
+              {verticalsReport ? <TotalReport data={verticalsReport} /> : null}
             </table>
           </div>
         </div>

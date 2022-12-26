@@ -4,13 +4,44 @@ import Datepicker from 'react-tailwindcss-datepicker';
 import ProductActivity from '~/components/ProductActivity';
 import ProductView from '~/components/ProductView';
 import { get7Days, getDateFormat } from '~/utils/dateformat.js';
-
+import { getTotalReport } from '~/services/productActivity/totalReports';
+import { useQuery } from '@tanstack/react-query';
+export type TotalReportType = {
+  conversions: number;
+  total_cost: number;
+  clicks: number;
+  impressions: number;
+  revenue: number;
+  conversion_rate: number;
+  cpc: number;
+  ctr: number;
+  cpm: number;
+  cpa: number;
+  profit: number;
+  roi: number;
+};
 const ProductsDashboard = () => {
   const [date, setDate] = useState({
     startDate: getDateFormat(get7Days()),
     endDate: getDateFormat(new Date()),
   });
-
+  const [accountsReport, setAccountsReport] = useState<TotalReportType>();
+  const [mediaBuyerReport, setMediaBuyerReport] = useState<TotalReportType>();
+  const [verticalsReport, setVerticalsReport] = useState<TotalReportType>();
+  const { startDate, endDate } = date;
+  const { queryKey: TotalKey, queryFn: TotalReportFn } = getTotalReport({
+    start_date: startDate,
+    end_date: endDate,
+  });
+  const { data, isLoading } = useQuery(TotalKey, TotalReportFn, {
+    onSuccess(data) {
+      const { total_repots, media_buyer_reports, vertical_reports } = data;
+      setAccountsReport(total_repots);
+      setMediaBuyerReport(media_buyer_reports);
+      setVerticalsReport(vertical_reports);
+    },
+    retry: 1,
+  });
   const handleValueChange = (newValue: any) => {
     setDate(newValue);
   };
@@ -36,8 +67,15 @@ const ProductsDashboard = () => {
       <main>
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="flex flex-col">
-            <ProductActivity date={date} />
-            <ProductView date={date} />
+            {accountsReport ? (
+              <ProductActivity total_report={accountsReport} />
+            ) : null}
+            <ProductView
+              date={date}
+              accountsReport={accountsReport}
+              mediaBuyerReport={mediaBuyerReport}
+              verticalsReport={verticalsReport}
+            />
           </div>
         </div>
       </main>

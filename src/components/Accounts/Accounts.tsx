@@ -31,6 +31,9 @@ import {
 
 import { DebouncedInput } from '../DebouncedInput';
 import Pagination from '../Pagination';
+import TotalReport from '~/components/TotalReport';
+import totalReport from '~/components/TotalReport';
+import { TotalReportType } from '~/screens/ProductsDashboard';
 
 export type Product = {
   id: number;
@@ -94,8 +97,9 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 };
 type Props = {
   products: Product[];
+  accountsReport: TotalReportType;
 };
-const Accounts = ({ products }: Props) => {
+const Accounts = ({ products, accountsReport }: any) => {
   const columnHelper = createColumnHelper<Product>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -275,6 +279,7 @@ const Accounts = ({ products }: Props) => {
                   </tr>
                 ))}
               </tbody>
+              {accountsReport ? <TotalReport data={accountsReport} /> : null}
             </table>
           </div>
         </div>

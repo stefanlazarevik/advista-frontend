@@ -9,7 +9,12 @@ import Verticals from '~/components/Verticals/Verticals';
 import { getMediaBuyer } from '~/services/productView/mediabuyer';
 import { getProducts } from '~/services/productView/products';
 import { getVerticals } from '~/services/productView/verticals';
-const ProductView = ({ date }: any) => {
+const ProductView = ({
+  date,
+  accountsReport,
+  mediaBuyerReport,
+  verticalsReport,
+}: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   console.log('selectedIndex', selectedIndex);
   function classNames(...classes: any[]) {
@@ -113,13 +118,25 @@ const ProductView = ({ date }: any) => {
 
         <Tab.Panels tabIndex={-1}>
           <Tab.Panel>
-            {products ? <Accounts products={products} /> : null}
+            {products ? (
+              <Accounts products={products} accountsReport={accountsReport} />
+            ) : null}
           </Tab.Panel>
           <Tab.Panel tabIndex={-1}>
-            {media_buyer ? <MediaBuyer media_buyer={media_buyer} /> : null}
+            {media_buyer ? (
+              <MediaBuyer
+                media_buyer={media_buyer}
+                mediaBuyerReport={mediaBuyerReport}
+              />
+            ) : null}
           </Tab.Panel>
           <Tab.Panel tabIndex={-1}>
-            {verticals != null ? <Verticals verticals={verticals} /> : null}
+            {verticals != null ? (
+              <Verticals
+                verticals={verticals}
+                verticalsReport={verticalsReport}
+              />
+            ) : null}
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

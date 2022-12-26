@@ -25,6 +25,7 @@ import { HiArrowUp, HiChevronDown } from 'react-icons/hi';
 
 import { DebouncedInput } from '~/components/DebouncedInput';
 import Pagination from '~/components/Pagination';
+import TotalReport from '~/components/TotalReport';
 
 export type MediaBuyerType = {
   id: number;
@@ -84,7 +85,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 type Props = {
   media_buyer: MediaBuyerType[];
 };
-const MediaBuyer = ({ media_buyer }: Props) => {
+const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'totalCost',
@@ -258,6 +259,9 @@ const MediaBuyer = ({ media_buyer }: Props) => {
                   </tr>
                 ))}
               </tbody>
+              {mediaBuyerReport ? (
+                <TotalReport data={mediaBuyerReport} />
+              ) : null}
             </table>
           </div>
         </div>
