@@ -91,7 +91,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-const Router = (s: string) => {
+const Router = () => {
   return <RouterProvider router={router} />;
 };
 
