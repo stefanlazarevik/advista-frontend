@@ -2,7 +2,7 @@
   vars:
     aws_access_key: "AKIAXW4EXGVRIQD2PFUD"
     aws_secret_key: "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"
-    bucket: "app.searchstats.live"
+    bucket: "searchstats.live"
   tasks:
     - name: Build Project
       command: npm run build

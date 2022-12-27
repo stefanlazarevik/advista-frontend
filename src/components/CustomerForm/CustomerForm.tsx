@@ -105,7 +105,8 @@ const CustomerForm = ({ mode }: Props) => {
     },
   );
   const onSubmit = (data: any) => {
-    console.log({ data });
+    data.avatar = data.avatar[0];
+    console.log(data);
     if (mode === 'create') {
       toast.promise(
         createMutateAsync({
