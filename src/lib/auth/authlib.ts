@@ -1,3 +1,5 @@
+import { UserProfileType } from '~/services/user/user';
+
 type tokenObj = {
   access_token: string;
   expires_in: number;
@@ -19,4 +21,11 @@ export const getTokenInfo = () => {
 };
 export const deleteTokenInfo = () => {
   localStorage.setItem('token', '');
+};
+export const isSuperUser = (user: UserProfileType = {}) => {
+  return user?.is_superuser ?? false;
+};
+
+export const isAdmin = (user: UserProfileType = {}) => {
+  return Number(user.user_mode) === 2;
 };

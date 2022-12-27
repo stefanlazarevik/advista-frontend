@@ -47,7 +47,7 @@ const SignUp = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
             className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=purple&shade=600"
+            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -123,7 +123,7 @@ const SignUp = () => {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full transform justify-center rounded-md border border-transparent bg-gradient-to-r from-purple-500 to-indigo-500 py-2 px-4 text-sm font-medium text-white shadow-sm transition-all  ease-in-out hover:from-indigo-500 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="flex w-full transform justify-center rounded-md border border-transparent bg-gradient-to-r from-indigo-500 to-indigo-500 py-2 px-4 text-sm font-medium text-white shadow-sm transition-all  ease-in-out hover:from-indigo-500 hover:to-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Sign Up
                 </button>

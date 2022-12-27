@@ -37,6 +37,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.0",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",

@@ -1,25 +1,32 @@
-import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { logoutUser } from '~/services/auth/auth';
 import { useMutation } from '@tanstack/react-query';
-import { deleteTokenInfo } from '~/lib/auth/authlib';
-import { useNavigate } from 'react-router';
+import { Fragment } from 'react';
 import toast from 'react-hot-toast';
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import defaultAvatar from '../../assets/avatar-1.jpg';
+
+import useUserHook from '~/hooks/user-hooks';
+import { deleteTokenInfo, isAdmin, isSuperUser } from '~/lib/auth/authlib';
+import { logoutUser } from '~/services/auth/auth';
+import { API_BASE_URL } from '~/environments';
+// const user = {
+//   name: 'Tom Cook',
+//   email: 'tom@example.com',
+//   imageUrl:
+//     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+// };
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Dashboard', href: '/', current: true },
   // { name: "Team", href: "#", current: false },
   // { name: "Projects", href: "#", current: false },
   // { name: "Calendar", href: "#", current: false },
 ];
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
+  { name: 'Admin User', href: '/user/list' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#', action: true },
 ];
@@ -27,6 +34,7 @@ const userNavigation = [
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }
+
 const Header = () => {
   const router = useNavigate();
   const { mutateAsync } = useMutation(logoutUser().queryFn, {
@@ -45,7 +53,9 @@ const Header = () => {
       });
     }
   };
-
+  const { data: UserData } = useUserHook();
+  const superUser = isSuperUser(UserData);
+  const admin = isAdmin(UserData);
   return (
     <>
       {/*
@@ -66,50 +76,53 @@ const Header = () => {
                     <div className="flex flex-shrink-0 items-center">
                       <img
                         className="block h-8 w-auto lg:hidden"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=purple&shade=600"
+                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                         alt="Your Company"
                       />
                       <img
                         className="hidden h-8 w-auto lg:block"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=purple&shade=600"
+                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                         alt="Your Company"
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                       {navigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className={classNames(
                             item.current
-                              ? 'border-purple-500 text-gray-900'
+                              ? 'border-indigo-500 text-gray-900'
                               : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                             'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium',
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                       type="button"
-                      className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                      className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
                       {/*<BellIcon className="h-6 w-6" aria-hidden="true" />*/}
                     </button>
 
                     {/* Profile dropdown */}
-                    <Menu as="div" className="bbbbbbbbbbbbbb relative ml-3">
+                    <Menu as="div" className=" relative ml-3">
                       <div>
-                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
+                            src={
+                              UserData?.avatar_thumb
+                                ? `${API_BASE_URL}${UserData.avatar_thumb}`
+                                : defaultAvatar
+                            }
                             alt=""
                           />
                         </Menu.Button>
@@ -124,40 +137,54 @@ const Header = () => {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) =>
-                                item?.action ? (
-                                  <button
-                                    className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block w-full px-4 py-2 text-left text-sm text-gray-700',
-                                    )}
-                                    onClick={() => handleLogOut(item?.name)}
-                                  >
-                                    {item?.name}
-                                  </button>
-                                ) : (
-                                  <a
-                                    href={item.href}
-                                    className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700',
-                                    )}
-                                  >
-                                    {item.name}
-                                  </a>
-                                )
-                              }
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to="#"
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700',
+                                )}
+                              >
+                                Your Profile
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          {superUser || admin ? (
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to="/user/list"
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700',
+                                  )}
+                                >
+                                  Admin User
+                                </Link>
+                              )}
                             </Menu.Item>
-                          ))}
+                          ) : null}
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block w-full px-4 py-2 text-left text-sm text-gray-700',
+                                )}
+                                onClick={() => handleLogOut('Sign out')}
+                              >
+                                Sign Out
+                              </button>
+                            )}
+                          </Menu.Item>
                         </Menu.Items>
                       </Transition>
                     </Menu>
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                    <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XMarkIcon
@@ -184,7 +211,7 @@ const Header = () => {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? 'border-purple-500 bg-purple-50 text-purple-700'
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                           : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800',
                         'block border-l-4 py-2 pl-3 pr-4 text-base font-medium',
                       )}
@@ -199,21 +226,25 @@ const Header = () => {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
+                        src={
+                          UserData?.avatar_thumb
+                            ? `${API_BASE_URL}${UserData?.avatar_thumb}`
+                            : defaultAvatar
+                        }
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">
-                        {user.name}
+                        {`${UserData?.first_name} ${UserData?.last_name}`}
                       </div>
                       <div className="text-sm font-medium text-gray-500">
-                        {user.email}
+                        {UserData?.email}
                       </div>
                     </div>
                     <button
                       type="button"
-                      className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                      className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
                       {/*<BellIcon className="h-6 w-6" aria-hidden="true" />*/}

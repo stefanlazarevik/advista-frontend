@@ -9,7 +9,7 @@ const ProductActivity = ({ total_report }: any) => {
           <dt className="truncate text-sm font-medium capitalize text-gray-500">
             {item.replaceAll('_', ' ')}
           </dt>
-          <dd className="mt-1 bg-gradient-to-r from-purple-700 to-pink-800 bg-clip-text text-3xl font-semibold uppercase tracking-tight text-transparent">
+          <dd className="mt-1 bg-gradient-to-r from-indigo-700 to-pink-800 bg-clip-text text-3xl font-semibold uppercase tracking-tight text-transparent">
             {`${Number(Number(total_report[item]) / 1000).toFixed(1)}k USD`}
           </dd>
         </div>
