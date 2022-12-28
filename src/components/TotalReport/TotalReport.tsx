@@ -10,25 +10,24 @@ const includeKeys = [
 ];
 
 const TotalReport = ({ data }: any) => {
-  console.log('data', data);
   return (
     <>
-      <tfoot className="table_footer sticky bottom-0 h-12 bg-slate-200">
+      <tfoot className="table_footer sticky bottom-0">
         <tr>
-          <th
+          <td
             // scope="row"
             className=""
           >
             Total
-          </th>
+          </td>
           {includeKeys.map((item, index) => (
-            <th className="ml-5 text-left" key={index}>
+            <td className="ml-5 text-left" key={index}>
               {item === 'total_cost' || item === 'revenue' || item === 'profit'
                 ? `${data[item]} USD`
                 : item === 'conversion_rate'
                 ? `${data[item]} %`
                 : data[item]}
-            </th>
+            </td>
           ))}
           {/*{Object.keys(data).map((key) => (*/}
           {/*  <th key={key}>{data[key]}</th>*/}

@@ -64,6 +64,7 @@ declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
   }
+
   interface FilterMeta {
     itemRank: RankingInfo;
   }
@@ -191,94 +192,98 @@ const Accounts = ({ products, accountsReport }: any) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
   return (
-    <div className="mt-2 flex flex-col">
-      <section className="mt-5 mb-4 flex w-full">
-        <div className="w-full">
-          <label htmlFor="search-account" className="sr-only">
+    <div className='mt-2 flex flex-col'>
+      <section className='mt-5 mb-4 flex w-full'>
+        <div className='w-full'>
+          <label htmlFor='search-account' className='sr-only'>
             Search
           </label>
           <DebouncedInput
-            type="text"
-            name="search-account"
-            id="search-account"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="Search"
+            type='text'
+            name='search-account'
+            id='search-account'
+            className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
+            placeholder='Search'
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
           />
         </div>
       </section>
-      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
-        <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table className="table_container">
-              <thead className="table_head">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
+      <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 '>
+        <div className='inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8'>
+          <div
+            className='h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
+            <table className='table_container'>
+              <thead className='table_head'>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
                       <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            {...{
-                              className: clsx(
-                                {
-                                  'cursor-pointer select-none flex items-center gap-2':
-                                    header.column.getCanSort(),
-                                },
-                                'group',
-                              ),
-                              onClick: header.column.getToggleSortingHandler(),
-                            }}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            {{
-                              asc: (
-                                <span className=" ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
+                      {header.isPlaceholder ? null : (
+                        <div
+                          {...{
+                            className: clsx(
+                              {
+                                'cursor-pointer select-none flex items-center gap-2':
+                                  header.column.getCanSort(),
+                              },
+                              'group',
+                            ),
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          {{
+                            asc: (
+                              <span
+                                className=' ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300'>
                                   <HiChevronDown
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
+                                    className='h-5 w-5'
+                                    aria-hidden='true'
                                   />
                                 </span>
-                              ),
-                              desc: (
-                                <span className="ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300">
+                            ),
+                            desc: (
+                              <span
+                                className='ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300'>
                                   <HiChevronDown
-                                    className="h-5 w-5 "
-                                    aria-hidden="true"
+                                    className='h-5 w-5 '
+                                    aria-hidden='true'
                                   />
                                 </span>
-                              ),
-                            }[header.column.getIsSorted() as string] ?? (
-                              <span className="invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible">
+                            ),
+                          }[header.column.getIsSorted() as string] ?? (
+                            <span
+                              className='invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible'>
                                 <HiChevronDown
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
+                                  className='h-5 w-5'
+                                  aria-hidden='true'
                                 />
                               </span>
-                            )}
-                          </div>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                          )}
+                        </div>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
               </thead>
-              <tbody className="table_body">
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+              <tbody className='table_body'>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
               </tbody>
               {accountsReport ? <TotalReport data={accountsReport} /> : null}
             </table>

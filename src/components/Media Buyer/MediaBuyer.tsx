@@ -189,7 +189,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
       </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="h-[30rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (
