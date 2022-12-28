@@ -38,7 +38,6 @@ type UserListParams = {
   query?: string;
 };
 export const getUserList = (params: UserListParams) => {
-  console.log({ params });
   return {
     queryFn() {
       const token = getTokenInfo()?.access_token;
@@ -89,7 +88,6 @@ export const getUserById = (id: number) => {
 export const createUser = () => {
   return {
     queryFn(data: CustomerFormType) {
-      console.log('data', data);
       const token = getTokenInfo()?.access_token;
       const formData = new FormData();
       for (const [key, value] of Object.entries(data)) {

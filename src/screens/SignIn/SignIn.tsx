@@ -24,7 +24,6 @@ const SignIn = () => {
   const router = useNavigate();
   const { mutateAsync } = useMutation(signIn().queryFn, {
     onSuccess: (data) => {
-      console.log('data-->', data);
       setTokenInfo(data);
       router('/');
     },

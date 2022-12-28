@@ -23,7 +23,7 @@ const Model = ({ visible, setVisible, title, setSubmit, body }: Props) => {
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
-          enterTo="opacity-100"
+          enterTo="opacity-10"
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
@@ -70,7 +70,7 @@ const Model = ({ visible, setVisible, title, setSubmit, body }: Props) => {
                     className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => setSubmit(true)}
                   >
-                    Deactivate
+                    Confirm
                   </button>
                   <button
                     type="button"

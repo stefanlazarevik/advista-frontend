@@ -310,7 +310,6 @@ const Verticals = ({ verticals, verticalsReport }: any) => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
-  console.log(verticals);
   return (
     <div className="mt-2 flex flex-col">
       <section className="mt-5 mb-4 flex w-full">

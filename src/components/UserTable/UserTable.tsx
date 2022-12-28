@@ -66,7 +66,6 @@ const UserTable = () => {
     if (delsubmit && selectUser) {
       setDelsubmit(false);
       setOpenDeleteModel(false);
-      console.log({ selectUser });
       toast.promise(deleteMutateAsync(selectUser), {
         loading: 'Deleting user',
         success: 'User deleted',
@@ -91,7 +90,6 @@ const UserTable = () => {
   );
 
   const handleActiveOrInactive = (id: number, status: boolean) => {
-    console.log(status);
     if (id === 0) {
       toast.error('Id no found');
       return;

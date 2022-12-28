@@ -58,7 +58,6 @@ const CustomerForm = ({ mode }: Props) => {
   const [userMode, setUserMode] = useState(false);
   const router = useNavigate();
   const { id }: any = useParams();
-  console.log('id', id);
   const { data } = useQuery({ ...getUserById(id), enabled: mode === 'edit' });
   const queryClient = useQueryClient();
   const {
@@ -106,7 +105,6 @@ const CustomerForm = ({ mode }: Props) => {
   );
   const onSubmit = (data: any) => {
     data.avatar = data.avatar !== null ? data.avatar[0] : null;
-    console.log(data);
     if (mode === 'create') {
       toast.promise(
         createMutateAsync({
@@ -129,7 +127,6 @@ const CustomerForm = ({ mode }: Props) => {
     }
   };
   const hanadleError = (error: any) => {
-    console.log('error', error);
   };
   useEffect(() => {
     setValue('user_mode', userMode ? 2 : 1);

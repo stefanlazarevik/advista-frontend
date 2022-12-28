@@ -27,6 +27,7 @@ import {
   HiChevronDown,
   HiChevronLeft,
   HiChevronRight,
+  Bi,
 } from 'react-icons/hi';
 
 import { DebouncedInput } from '../DebouncedInput';
@@ -100,8 +101,9 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 type Props = {
   products: Product[];
   accountsReport: TotalReportType;
+  tableHeader: any;
 };
-const Accounts = ({ products, accountsReport }: any) => {
+const Accounts = ({ products, accountsReport, tableHeader }: any) => {
   const columnHelper = createColumnHelper<Product>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -132,6 +134,7 @@ const Accounts = ({ products, accountsReport }: any) => {
       },
     }),
     columnHelper.accessor('clicks', {
+      id: 'clicks',
       header: 'Clicks',
       cell: (info) => {
         const { clicks } = info.row.original;
@@ -140,6 +143,7 @@ const Accounts = ({ products, accountsReport }: any) => {
     }),
     columnHelper.accessor('conversion_rate', {
       header: 'Conversion Rate',
+      id: 'conversion_rate',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
         return <div>{numberWithCommas(conversion_rate)} %</div>;
@@ -147,6 +151,7 @@ const Accounts = ({ products, accountsReport }: any) => {
     }),
     columnHelper.accessor('cpa', {
       header: 'CPA',
+      id: 'cpa',
       cell: (info) => {
         const { cpa } = info.row.original;
         return <div>{numberWithCommas(cpa)}</div>;
@@ -154,12 +159,14 @@ const Accounts = ({ products, accountsReport }: any) => {
     }),
     columnHelper.accessor('revenue', {
       header: 'Revenue',
+      id: 'revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
         return <div>{numberWithCommas(revenue)} USD</div>;
       },
     }),
     columnHelper.accessor('profit', {
+      id: 'profit',
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
@@ -167,8 +174,13 @@ const Accounts = ({ products, accountsReport }: any) => {
       },
     }),
   ];
-  const [globalFilter, setGlobalFilter] = React.useState('');
 
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const checkFilterValue = (key: any) => {
+    const found = tableHeader?.find((value: { key: any; }) => value?.key === key);
+    if (found) return true;
+    return false;
+  };
   const table = useReactTable({
     data: products,
     columns,
@@ -178,8 +190,28 @@ const Accounts = ({ products, accountsReport }: any) => {
     state: {
       sorting,
       globalFilter,
-    },
+      columnVisibility: {
+        totalCost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+        name: checkFilterValue('name'),
+        conversion_rate: checkFilterValue('conversion_rate'),
 
+      },
+    },
+    initialState: {
+      columnVisibility: {
+        totalCost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        conversion_rate: checkFilterValue('conversion_rate'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+        name: checkFilterValue('name'),
+      },
+    },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
@@ -218,7 +250,7 @@ const Accounts = ({ products, accountsReport }: any) => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                      <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <div
                           {...{
