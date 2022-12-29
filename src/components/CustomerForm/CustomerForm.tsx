@@ -1,10 +1,5 @@
 import { useParams } from 'react-router-dom';
-import {
-  createUser,
-  getUserById,
-  updateUser,
-  UserProfileType,
-} from '~/services/user/user';
+import { createUser, getUserById, updateUser } from '~/services/user/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +11,7 @@ import Error from '~/utils/Error';
 import { Switch } from '@headlessui/react';
 import classNames from 'classnames';
 import { API_BASE_URL } from '~/environments';
+
 type Props = {
   mode: string;
 };
@@ -37,7 +33,7 @@ export const newCustomerSchema = z
     username: z.string().min(2, TWO_CHARACTER),
     first_name: z.string().min(2, TWO_CHARACTER).nullable(),
     last_name: z.string().min(2, TWO_CHARACTER).nullable().optional(),
-    email: z.string().email(),
+    email: z.string().email('Please enter a valid Email address'),
     password: z.string().min(8, messageCharacter(8)),
     confirm_password: z.string().min(8, messageCharacter(8)),
     avatar: z.any().nullable().optional(),
@@ -126,8 +122,7 @@ const CustomerForm = ({ mode }: Props) => {
       });
     }
   };
-  const hanadleError = (error: any) => {
-  };
+  const hanadleError = (error: any) => {};
   useEffect(() => {
     setValue('user_mode', userMode ? 2 : 1);
   }, [setValue, userMode]);
@@ -262,10 +257,10 @@ const CustomerForm = ({ mode }: Props) => {
                       className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                       {...register('confirm_password')}
                     />
+                    {errors?.confirm_password?.message ? (
+                      <Error text={errors.confirm_password.message} />
+                    ) : null}
                   </div>
-                  {errors?.confirm_password?.message ? (
-                    <Error text={errors.confirm_password.message} />
-                  ) : null}
                 </div>
               ) : null}
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">

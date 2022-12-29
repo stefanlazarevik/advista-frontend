@@ -36,7 +36,7 @@
 //     }),
 //     columnHelper.display({
 //       id: 'conversion_rate',
-//       header: 'Conversion Rate',
+//       header: 'CVR (%)',
 //       cell: (info) => {
 //         const { conversion_rate } = info.row.original;
 //         return <div>{conversion_rate}</div>;
@@ -120,13 +120,8 @@
 //
 // export default Verticals;
 
+import { rankItem } from '@tanstack/match-sorter-utils';
 import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils';
-import {
-  ColumnDef,
   createColumnHelper,
   FilterFn,
   flexRender,
@@ -135,65 +130,24 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
-  SortingFn,
-  sortingFns,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
 import React from 'react';
-import {
-  HiArrowUp,
-  HiChevronDown,
-  HiChevronLeft,
-  HiChevronRight,
-} from 'react-icons/hi';
+import { HiChevronDown } from 'react-icons/hi';
 
 import { DebouncedInput } from '~/components/DebouncedInput';
-import Pagination from '~/components/Pagination';
 import TotalReport from '~/components/TotalReport';
 import { numberWithCommas } from '~/utils/common';
+import { TableHeader, TotalReportType, VerticalsType } from '~/utils/interface';
 
-export type VerticalsType = {
-  id: number;
-  details: {
-    url: string[];
-    name: string;
-    stats: string[];
-    source: string[];
-    domains: string[];
-    category: string;
-  };
-  vertical_id: string;
-  created_time: string;
-  conversion_rate: number;
-  total_cost: number;
-  clicks: number;
-  conversions: number;
-  impressions: number;
-  name: string;
-  ctr: number;
-  cpm: number;
-  cpc: number;
-  cpa: number;
-  revenue: number;
-  profit: number;
-  roi: number;
-};
 type Props = {
   verticals: VerticalsType[];
+  verticalsReport: TotalReportType;
+  tableHeader: TableHeader[];
 };
-
-// declare module '@tanstack/table-core' {
-//   interface FilterFns {
-//     fuzzy: FilterFn<unknown>;
-//   }
-//   interface FilterMeta {
-//     itemRank: RankingInfo;
-//   }
-// }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -207,25 +161,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
-
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
-// type Props = {
-//   products: Product[];
-// };
-const Verticals = ({ verticals, verticalsReport }: any) => {
+const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
   const columnHelper = createColumnHelper<VerticalsType>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -258,7 +194,7 @@ const Verticals = ({ verticals, verticalsReport }: any) => {
       },
     }),
     columnHelper.accessor('conversion_rate', {
-      header: 'Conversion Rate',
+      header: 'CVR (%)',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
         return <div>{numberWithCommas(conversion_rate)} %</div>;
@@ -287,7 +223,10 @@ const Verticals = ({ verticals, verticalsReport }: any) => {
     }),
   ];
   const [globalFilter, setGlobalFilter] = React.useState('');
-
+  const checkFilterValue = (key: string) => {
+    const found = tableHeader.find((header) => header?.key === key);
+    return !!found;
+  };
   const table = useReactTable({
     data: verticals,
     columns,
@@ -297,8 +236,25 @@ const Verticals = ({ verticals, verticalsReport }: any) => {
     state: {
       sorting,
       globalFilter,
+      columnVisibility: {
+        total_cost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+        conversion_rate: checkFilterValue('conversion_rate'),
+      },
     },
-
+    initialState: {
+      columnVisibility: {
+        total_cost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        conversion_rate: checkFilterValue('conversion_rate'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+      },
+    },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
@@ -402,7 +358,9 @@ const Verticals = ({ verticals, verticalsReport }: any) => {
                   </tr>
                 ))}
               </tbody>
-              {verticalsReport ? <TotalReport data={verticalsReport} /> : null}
+              {verticalsReport ? (
+                <TotalReport data={verticalsReport} tableHeader={tableHeader} />
+              ) : null}
             </table>
           </div>
         </div>

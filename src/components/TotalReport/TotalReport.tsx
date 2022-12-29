@@ -1,32 +1,41 @@
-import { numberWithCommas } from '~/utils/common';
+import { TableHeader, TotalReportType } from '~/utils/interface';
+import { useEffect, useState } from 'react';
 
-const includeKeys = [
-  'total_cost',
-  'clicks',
-  'conversion_rate',
-  'cpa',
-  'revenue',
-  'profit',
-];
-
-const TotalReport = ({ data }: any) => {
+type Props = {
+  data: TotalReportType;
+  tableHeader?: TableHeader[];
+};
+const TotalReport = ({ data, tableHeader }: Props) => {
+  const [items, setItems] = useState<string[]>();
+  useEffect(() => {
+    const data: string[] = [];
+    tableHeader?.map((header) => {
+      if (header?.key !== 'name') {
+        data.push(header?.key);
+      }
+      return data;
+    });
+    setItems(data);
+  }, [tableHeader]);
+  useEffect(() => {
+    console.log({ tableHeader });
+  }, [tableHeader]);
+  const getReportByKey = (key: string) => {
+    // @ts-ignore
+    return data[key];
+  };
   return (
     <>
       <tfoot className="table_footer sticky bottom-0">
         <tr>
-          <td
-            // scope="row"
-            className=""
-          >
-            Total
-          </td>
-          {includeKeys.map((item, index) => (
+          <td className="">Total</td>
+          {items?.map((item, index) => (
             <td className="ml-5 text-left" key={index}>
               {item === 'total_cost' || item === 'revenue' || item === 'profit'
-                ? `${data[item]} USD`
+                ? `${getReportByKey(item)} USD`
                 : item === 'conversion_rate'
-                ? `${data[item]} %`
-                : data[item]}
+                ? `${getReportByKey(item)} %`
+                : `${getReportByKey(item)}`}
             </td>
           ))}
           {/*{Object.keys(data).map((key) => (*/}

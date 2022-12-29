@@ -1,16 +1,13 @@
 import { getTokenInfo } from '~/lib/auth/authlib';
 import axios from 'axios';
 import { API_URL } from '~/environments';
-import { Product } from '~/components/Accounts';
-import { MediaBuyerType } from '~/components/Media Buyer/MediaBuyer';
+import { MediaBuyerType, TotalReportType } from '~/utils/interface';
+
 type ResponseType = {
-  count: number;
-  next?: string;
-  previous?: string;
-  total_page: number;
   results: {
     success: boolean;
     data: MediaBuyerType[];
+    media_buyer_reports: TotalReportType;
   };
 };
 type ParamsType = {

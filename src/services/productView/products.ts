@@ -1,20 +1,18 @@
 import { getTokenInfo } from '~/lib/auth/authlib';
 import axios from 'axios';
 import { API_URL } from '~/environments';
-import { Product } from '~/components/Accounts';
+import { Product, TotalReportType } from '~/utils/interface';
+
 type Params = {
   selectedTab: number;
   startDate: string;
   endDate: string;
 };
 type ResponseType = {
-  count: number;
-  next?: string;
-  previous?: string;
-  total_page: number;
   results: {
-    success: boolean;
+    success: true;
     data: Product[];
+    total_reports: TotalReportType;
   };
 };
 export const getProducts = (params: Params) => {

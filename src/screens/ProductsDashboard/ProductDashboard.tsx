@@ -6,20 +6,8 @@ import ProductView from '~/components/ProductView';
 import { get7Days, getDateFormat } from '~/utils/dateformat.js';
 import { getTotalReport } from '~/services/productActivity/totalReports';
 import { useQuery } from '@tanstack/react-query';
-export type TotalReportType = {
-  conversions: number;
-  total_cost: number;
-  clicks: number;
-  impressions: number;
-  revenue: number;
-  conversion_rate: number;
-  cpc: number;
-  ctr: number;
-  cpm: number;
-  cpa: number;
-  profit: number;
-  roi: number;
-};
+import { TotalReportType } from '~/utils/interface';
+
 const ProductsDashboard = () => {
   const [date, setDate] = useState({
     startDate: getDateFormat(get7Days()),

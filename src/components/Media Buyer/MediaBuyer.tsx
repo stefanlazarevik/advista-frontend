@@ -1,8 +1,4 @@
-import {
-  compareItems,
-  RankingInfo,
-  rankItem,
-} from '@tanstack/match-sorter-utils';
+import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 import {
   createColumnHelper,
   FilterFn,
@@ -12,46 +8,28 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
-  SortingFn,
-  sortingFns,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
 import React from 'react';
-import { HiArrowUp, HiChevronDown } from 'react-icons/hi';
+import { HiChevronDown } from 'react-icons/hi';
 
 import { DebouncedInput } from '~/components/DebouncedInput';
-import Pagination from '~/components/Pagination';
 import TotalReport from '~/components/TotalReport';
 import { numberWithCommas } from '~/utils/common';
-
-export type MediaBuyerType = {
-  id: number;
-  name: string;
-  email: string;
-  media_buyer_id: string;
-  total_cost: number;
-  clicks: number;
-  conversion_rate: number;
-  conversions: number;
-  cpm: number;
-  cpc: number;
-  ctr: number;
-  cpa: number;
-  impressions: number;
-  revenue: number;
-  profit: number;
-  roi: number;
-  currency: string;
-};
+import {
+  MediaBuyerType,
+  TableHeader,
+  TotalReportType,
+} from '~/utils/interface';
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
   }
+
   interface FilterMeta {
     itemRank: RankingInfo;
   }
@@ -69,24 +47,12 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
 type Props = {
   media_buyer: MediaBuyerType[];
+  mediaBuyerReport: TotalReportType;
+  tableHeader: TableHeader[];
 };
-const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
+const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'totalCost',
@@ -119,7 +85,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
       },
     }),
     columnHelper.accessor('conversion_rate', {
-      header: 'Conversion Rate',
+      header: 'CVR (%)',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
         return <div>{numberWithCommas(conversion_rate)} %</div>;
@@ -148,6 +114,10 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
     }),
   ];
   const [globalFilter, setGlobalFilter] = React.useState('');
+  const checkFilterValue = (key: string) => {
+    const found = tableHeader.find((header) => header?.key === key);
+    return !!found;
+  };
   const table = useReactTable({
     data: media_buyer,
     columns,
@@ -157,6 +127,24 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
     state: {
       sorting,
       globalFilter,
+      columnVisibility: {
+        total_cost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+        conversion_rate: checkFilterValue('conversion_rate'),
+      },
+    },
+    initialState: {
+      columnVisibility: {
+        total_cost: checkFilterValue('total_cost'),
+        profit: checkFilterValue('profit'),
+        revenue: checkFilterValue('revenue'),
+        conversion_rate: checkFilterValue('conversion_rate'),
+        clicks: checkFilterValue('clicks'),
+        cpa: checkFilterValue('cpa'),
+      },
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
@@ -261,7 +249,10 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport }: any) => {
                 ))}
               </tbody>
               {mediaBuyerReport ? (
-                <TotalReport data={mediaBuyerReport} />
+                <TotalReport
+                  data={mediaBuyerReport}
+                  tableHeader={tableHeader}
+                />
               ) : null}
             </table>
           </div>

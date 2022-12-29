@@ -1,0 +1,88 @@
+export type TableHeader = {
+  key: string;
+  label: string;
+  order: number;
+};
+export type Product = {
+  id: number;
+  advertiser_id: string;
+  name: string;
+  timezone: string;
+  display_timezone: string;
+  status: string;
+  total_cost: number;
+  clicks: number;
+  conversion_rate: number;
+  conversions: number;
+  cpm: number;
+  cpc: number;
+  ctr: number;
+  cpa: number;
+  impressions: number;
+  company: string;
+  status_code: string;
+  revenue: number;
+  profit: number;
+  roi: number;
+  currency: string;
+};
+
+export type MediaBuyerType = {
+  id: number;
+  name: string;
+  email: string;
+  media_buyer_id: string;
+  total_cost: number;
+  clicks: number;
+  conversion_rate: number;
+  conversions: number;
+  cpm: number;
+  cpc: number;
+  ctr: number;
+  cpa: number;
+  impressions: number;
+  revenue: number;
+  profit: number;
+  roi: number;
+  currency: string;
+};
+export type VerticalsType = {
+  id: number;
+  details: {
+    url: string[];
+    name: string;
+    stats: string[];
+    source: string[];
+    domains: string[];
+    category: string;
+  };
+  vertical_id: string;
+  created_time: string;
+  conversion_rate: number;
+  total_cost: number;
+  clicks: number;
+  conversions: number;
+  impressions: number;
+  name: string;
+  ctr: number;
+  cpm: number;
+  cpc: number;
+  cpa: number;
+  revenue: number;
+  profit: number;
+  roi: number;
+};
+export type TotalReportType = {
+  conversions?: number;
+  total_cost?: number;
+  clicks?: number;
+  impressions?: number;
+  revenue?: number;
+  conversion_rate?: number;
+  cpc?: number;
+  ctr?: number;
+  cpm?: number;
+  cpa?: number;
+  profit?: number;
+  roi?: number;
+};

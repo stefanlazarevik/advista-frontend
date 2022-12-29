@@ -1,16 +1,14 @@
 import { getTokenInfo } from '~/lib/auth/authlib';
 import axios from 'axios';
 import { API_URL } from '~/environments';
-import { MediaBuyerType } from '~/components/Media Buyer/MediaBuyer';
 import { VerticalsType } from '~/components/Verticals/Verticals';
+import { TotalReportType } from '~/utils/interface';
+
 type ResponseType = {
-  count: number;
-  next?: string;
-  previous?: string;
-  total_page: number;
   results: {
     success: boolean;
     data: VerticalsType[];
+    vertical_reports: TotalReportType;
   };
 };
 type ParamsType = {

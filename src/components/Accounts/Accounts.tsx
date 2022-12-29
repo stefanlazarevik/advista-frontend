@@ -1,10 +1,5 @@
+import { rankItem } from '@tanstack/match-sorter-utils';
 import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils';
-import {
-  ColumnDef,
   createColumnHelper,
   FilterFn,
   flexRender,
@@ -13,63 +8,20 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
-  SortingFn,
-  sortingFns,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
-import React from 'react';
-import {
-  HiArrowUp,
-  HiChevronDown,
-  HiChevronLeft,
-  HiChevronRight,
-  Bi,
-} from 'react-icons/hi';
-
+import React, { Fragment, useEffect } from 'react';
+import { HiChevronDown } from 'react-icons/hi';
 import { DebouncedInput } from '../DebouncedInput';
-import Pagination from '../Pagination';
 import TotalReport from '~/components/TotalReport';
-import totalReport from '~/components/TotalReport';
-import { TotalReportType } from '~/screens/ProductsDashboard';
 import { numberWithCommas } from '~/utils/common';
-
-export type Product = {
-  id: number;
-  advertiser_id: string;
-  name: string;
-  timezone: string;
-  display_timezone: string;
-  status: string;
-  total_cost: number;
-  clicks: number;
-  conversion_rate: number;
-  conversions: number;
-  cpm: number;
-  cpc: number;
-  ctr: number;
-  cpa: number;
-  impressions: number;
-  company: string;
-  status_code: string;
-  revenue: number;
-  profit: number;
-  roi: number;
-  currency: string;
-};
-
-declare module '@tanstack/table-core' {
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>;
-  }
-
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
+import { Product, TableHeader, TotalReportType } from '~/utils/interface';
+import { Listbox, Transition } from '@headlessui/react';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import classNames from 'classnames';
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -83,34 +35,23 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
-
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
 type Props = {
   products: Product[];
   accountsReport: TotalReportType;
-  tableHeader: any;
+  tableHeader: TableHeader[];
 };
-const Accounts = ({ products, accountsReport, tableHeader }: any) => {
+const Accounts = ({ products, accountsReport, tableHeader }: Props) => {
+  const [selected, setSelected] = React.useState<TableHeader[]>([]);
   const columnHelper = createColumnHelper<Product>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: 'totalCost',
+      id: 'total_cost',
       desc: true,
     },
   ]);
+  useEffect(() => {
+    console.log('selected', selected);
+  }, [selected]);
   const columns = [
     columnHelper.accessor('name', {
       header: 'Name',
@@ -122,7 +63,7 @@ const Accounts = ({ products, accountsReport, tableHeader }: any) => {
     }),
     columnHelper.accessor('total_cost', {
       header: 'Total Cost',
-      id: 'totalCost',
+      id: 'total_cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
         return (
@@ -142,7 +83,7 @@ const Accounts = ({ products, accountsReport, tableHeader }: any) => {
       },
     }),
     columnHelper.accessor('conversion_rate', {
-      header: 'Conversion Rate',
+      header: 'CVR (%)',
       id: 'conversion_rate',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
@@ -176,10 +117,9 @@ const Accounts = ({ products, accountsReport, tableHeader }: any) => {
   ];
 
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const checkFilterValue = (key: any) => {
-    const found = tableHeader?.find((value: { key: any; }) => value?.key === key);
-    if (found) return true;
-    return false;
+  const checkFilterValue = (key: string) => {
+    const found = tableHeader.find((header) => header?.key === key);
+    return !!found;
   };
   const table = useReactTable({
     data: products,
@@ -191,25 +131,22 @@ const Accounts = ({ products, accountsReport, tableHeader }: any) => {
       sorting,
       globalFilter,
       columnVisibility: {
-        totalCost: checkFilterValue('total_cost'),
+        total_cost: checkFilterValue('total_cost'),
         profit: checkFilterValue('profit'),
         revenue: checkFilterValue('revenue'),
         clicks: checkFilterValue('clicks'),
         cpa: checkFilterValue('cpa'),
-        name: checkFilterValue('name'),
         conversion_rate: checkFilterValue('conversion_rate'),
-
       },
     },
     initialState: {
       columnVisibility: {
-        totalCost: checkFilterValue('total_cost'),
+        total_cost: checkFilterValue('total_cost'),
         profit: checkFilterValue('profit'),
         revenue: checkFilterValue('revenue'),
         conversion_rate: checkFilterValue('conversion_rate'),
         clicks: checkFilterValue('clicks'),
         cpa: checkFilterValue('cpa'),
-        name: checkFilterValue('name'),
       },
     },
     onSortingChange: setSorting,
@@ -224,100 +161,171 @@ const Accounts = ({ products, accountsReport, tableHeader }: any) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
   return (
-    <div className='mt-2 flex flex-col'>
-      <section className='mt-5 mb-4 flex w-full'>
-        <div className='w-full'>
-          <label htmlFor='search-account' className='sr-only'>
+    <div className="mt-2 flex flex-col">
+      <section className="mt-5 mb-4 flex w-full">
+        <div className="w-10/12">
+          <label htmlFor="search-account" className="sr-only">
             Search
           </label>
           <DebouncedInput
-            type='text'
-            name='search-account'
-            id='search-account'
-            className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-            placeholder='Search'
+            type="text"
+            name="search-account"
+            id="search-account"
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            placeholder="Search"
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
           />
         </div>
-      </section>
-      <div className='-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 '>
-        <div className='inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8'>
-          <div
-            className='h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg'>
-            <table className='table_container'>
-              <thead className='table_head'>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: clsx(
-                              {
-                                'cursor-pointer select-none flex items-center gap-2':
-                                  header.column.getCanSort(),
-                              },
-                              'group',
-                            ),
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
+        <div className="">
+          <Listbox value={selected} onChange={setSelected} multiple>
+            {({ open }) => (
+              <>
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                    <span className="block truncate">
+                      {selected.map((header) => header?.key).join(', ')}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronUpDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+
+                  <Transition
+                    show={open}
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-10"
+                    leaveTo="opacity-25"
+                  >
+                    <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {tableHeader.map((header) => (
+                        <Listbox.Option
+                          key={header?.key}
+                          className={({ active }) =>
+                            classNames(
+                              active
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-gray-900',
+                              'relative cursor-default select-none py-2 pl-3 pr-9',
+                            )
+                          }
+                          value={header}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+                          {({ selected, active }) => (
+                            <>
+                              <span
+                                className={classNames(
+                                  selected ? 'font-semibold' : 'font-normal',
+                                  'block truncate',
+                                )}
+                              >
+                                {header?.label}
+                              </span>
+
+                              {selected ? (
+                                <span
+                                  className={classNames(
+                                    active ? 'text-white' : 'text-indigo-600',
+                                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                                  )}
+                                >
+                                  <CheckIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              ) : null}
+                            </>
                           )}
-                          {{
-                            asc: (
-                              <span
-                                className=' ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300'>
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </>
+            )}
+          </Listbox>
+        </div>
+      </section>
+      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
+        <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
+          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table className="table_container">
+              <thead className="table_head">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              className: clsx(
+                                {
+                                  'cursor-pointer select-none flex items-center gap-2':
+                                    header.column.getCanSort(),
+                                },
+                                'group',
+                              ),
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            {{
+                              asc: (
+                                <span className=" ml-2 flex-none transform rounded bg-gray-200 text-gray-900 transition-all group-hover:bg-gray-300">
                                   <HiChevronDown
-                                    className='h-5 w-5'
-                                    aria-hidden='true'
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
                                   />
                                 </span>
-                            ),
-                            desc: (
-                              <span
-                                className='ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300'>
+                              ),
+                              desc: (
+                                <span className="ml-2 flex-none rotate-180 transform rounded bg-gray-200 text-gray-900 transition-all  group-hover:bg-gray-300">
                                   <HiChevronDown
-                                    className='h-5 w-5 '
-                                    aria-hidden='true'
+                                    className="h-5 w-5 "
+                                    aria-hidden="true"
                                   />
                                 </span>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? (
-                            <span
-                              className='invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible'>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 transition-all group-hover:visible group-focus:visible">
                                 <HiChevronDown
-                                  className='h-5 w-5'
-                                  aria-hidden='true'
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
                                 />
                               </span>
-                          )}
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
+                            )}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
               </thead>
-              <tbody className='table_body'>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tbody className="table_body">
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
-              {accountsReport ? <TotalReport data={accountsReport} /> : null}
+              {accountsReport ? (
+                <TotalReport data={accountsReport} tableHeader={tableHeader} />
+              ) : null}
             </table>
           </div>
         </div>
