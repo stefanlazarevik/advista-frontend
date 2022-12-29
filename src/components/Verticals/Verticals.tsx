@@ -135,19 +135,15 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 
 import { DebouncedInput } from '~/components/DebouncedInput';
 import TotalReport from '~/components/TotalReport';
 import { numberWithCommas } from '~/utils/common';
 import { TableHeader, TotalReportType, VerticalsType } from '~/utils/interface';
-
-type Props = {
-  verticals: VerticalsType[];
-  verticalsReport: TotalReportType;
-  tableHeader: TableHeader[];
-};
+import { verticalsColumn } from '~/components/ProductView/tableData';
+import FilterWidget from '~/components/FilterWidget';
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -161,14 +157,26 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
-const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
+type Props = {
+  verticals: VerticalsType[];
+  verticalsReport: TotalReportType;
+  tableHeader: TableHeader[];
+  setTableHeader: React.Dispatch<SetStateAction<TableHeader[]>>;
+};
+const Verticals = ({
+  verticals,
+  verticalsReport,
+  tableHeader,
+  setTableHeader,
+}: Props) => {
   const columnHelper = createColumnHelper<VerticalsType>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: 'totalCost',
+      id: 'total_cost',
       desc: true,
     },
   ]);
+  const tableColumn = verticalsColumn;
   const columns = [
     columnHelper.accessor('name', {
       header: 'Name',
@@ -180,13 +188,14 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
     }),
     columnHelper.accessor('total_cost', {
       header: 'Total Cost',
-      id: 'totalCost',
+      id: 'total_cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
         return <div>{numberWithCommas(total_cost)}&nbsp; &nbsp; EUR</div>;
       },
     }),
     columnHelper.accessor('clicks', {
+      id: 'clicks',
       header: 'Clicks',
       cell: (info) => {
         const { clicks } = info.row.original;
@@ -194,6 +203,7 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('conversion_rate', {
+      id: 'conversion_rate',
       header: 'CVR (%)',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
@@ -201,6 +211,7 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('cpa', {
+      id: 'cpa',
       header: 'CPA',
       cell: (info) => {
         const { cpa } = info.row.original;
@@ -208,6 +219,7 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('revenue', {
+      id: 'revenue',
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
@@ -215,6 +227,7 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('profit', {
+      id: 'profit',
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
@@ -268,7 +281,7 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
   });
   return (
     <div className="mt-2 flex flex-col">
-      <section className="mt-5 mb-4 flex w-full">
+      <section className="mt-5 mb-4 flex w-full gap-4">
         <div className="w-full">
           <label htmlFor="search-account" className="sr-only">
             Search
@@ -277,10 +290,17 @@ const Verticals = ({ verticals, verticalsReport, tableHeader }: Props) => {
             type="text"
             name="search-account"
             id="search-account"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
+          />
+        </div>
+        <div className="">
+          <FilterWidget
+            tableColumn={tableColumn}
+            tableHeader={tableHeader}
+            setTableHeader={setTableHeader}
           />
         </div>
       </section>

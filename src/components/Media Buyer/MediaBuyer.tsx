@@ -13,7 +13,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 
 import { DebouncedInput } from '~/components/DebouncedInput';
@@ -24,6 +24,8 @@ import {
   TableHeader,
   TotalReportType,
 } from '~/utils/interface';
+import FilterWidget from '~/components/FilterWidget';
+import { mediaBuyerColumn } from '~/components/ProductView/tableData';
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -51,14 +53,21 @@ type Props = {
   media_buyer: MediaBuyerType[];
   mediaBuyerReport: TotalReportType;
   tableHeader: TableHeader[];
+  setTableHeader: React.Dispatch<SetStateAction<TableHeader[]>>;
 };
-const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
+const MediaBuyer = ({
+  media_buyer,
+  mediaBuyerReport,
+  tableHeader,
+  setTableHeader,
+}: Props) => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'total_cost',
       desc: true,
     },
   ]);
+  const tableColumn = mediaBuyerColumn;
   const columnHelper = createColumnHelper<MediaBuyerType>();
   const columns = [
     columnHelper.accessor('name', {
@@ -165,7 +174,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
   });
   return (
     <div className="mt-2 flex flex-col">
-      <section className="mt-5 mb-4 flex w-full">
+      <section className="mt-5 mb-4 flex w-full gap-4">
         <div className="w-full">
           <label htmlFor="search-account" className="sr-only">
             Search
@@ -174,16 +183,23 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
             type="text"
             name="search-account"
             id="search-account"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
           />
         </div>
+        <div className="">
+          <FilterWidget
+            tableColumn={tableColumn}
+            tableHeader={tableHeader}
+            setTableHeader={setTableHeader}
+          />
+        </div>
       </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (

@@ -17,31 +17,28 @@ const TotalReport = ({ data, tableHeader }: Props) => {
     });
     setItems(data);
   }, [tableHeader]);
-  useEffect(() => {
-    console.log({ tableHeader });
-  }, [tableHeader]);
   const getReportByKey = (key: string) => {
     // @ts-ignore
     return data[key];
   };
   return (
     <>
-      <tfoot className="table_footer sticky bottom-0">
-        <tr>
-          <td className="">Total</td>
-          {items?.map((item, index) => (
-            <td className="ml-5 text-left" key={index}>
-              {item === 'total_cost' || item === 'revenue' || item === 'profit'
-                ? `${getReportByKey(item)} USD`
-                : item === 'conversion_rate'
+      <tfoot className='table_footer sticky bottom-0'>
+      <tr>
+        <td className=''>Total</td>
+        {items?.map((item, index) => (
+          <td className='ml-5 text-left' key={index}>
+            {item === 'total_cost' || item === 'revenue' || item === 'profit'
+              ? `${getReportByKey(item)} USD`
+              : item === 'conversion_rate'
                 ? `${getReportByKey(item)} %`
                 : `${getReportByKey(item)}`}
-            </td>
-          ))}
-          {/*{Object.keys(data).map((key) => (*/}
-          {/*  <th key={key}>{data[key]}</th>*/}
-          {/*))}*/}
-        </tr>
+          </td>
+        ))}
+        {/*{Object.keys(data).map((key) => (*/}
+        {/*  <th key={key}>{data[key]}</th>*/}
+        {/*))}*/}
+      </tr>
       </tfoot>
     </>
   );

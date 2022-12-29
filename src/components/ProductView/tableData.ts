@@ -35,7 +35,7 @@ export const productFilterValue = [
   { key: 'conversion_rate', label: 'CVR (%)', order: 11 },
   { key: 'cpa', label: 'CPA', order: 9 },
   { key: 'profit', label: 'Profit', order: 15 },
-  { key: 'revenue', label: 'Revenue', order: 17 },
+  // { key: 'revenue', label: 'Revenue', order: 17 },
 ];
 export const mediaBuyerColumn = [
   { key: 'name', label: 'Name', order: 1 },

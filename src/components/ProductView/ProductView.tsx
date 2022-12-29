@@ -1,18 +1,12 @@
 import { Tab } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { BiFilterAlt } from 'react-icons/bi';
 
 import Accounts from '../Accounts';
-
-import FilterWidget from '~/components/FilterWidget';
 import MediaBuyer from '~/components/Media Buyer/MediaBuyer';
 import {
-  mediaBuyerColumn,
   mediaBuyerFilterValue,
-  productColumn,
   productFilterValue,
-  verticalsColumn,
   verticalsFilterValue,
 } from '~/components/ProductView/tableData';
 import Verticals from '~/components/Verticals/Verticals';
@@ -23,25 +17,15 @@ import { TableHeader } from '~/utils/interface';
 
 const ProductView = ({ date }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [filterVisible, setFilterVisible] = useState<boolean>(false);
-  const [tableColumnForAccounts, setTableColumnForAccounts] = useState<
-    TableHeader[]
-  >(() => {
-    return productColumn;
-  });
   const [tableHeaderForAccounts, setTableHeaderForAccounts] = useState<
     TableHeader[]
   >(() => {
     return productFilterValue;
   });
-  const [tableColumnForMediaBuyer, setTableColumnForMediaBuyer] =
-    useState<TableHeader[]>(mediaBuyerColumn);
   const [tableHeaderForMediaBuyer, setTableHeaderForMediaBuyer] = useState<
     TableHeader[]
   >(mediaBuyerFilterValue);
 
-  const [tableColumnForVerticals, setTableColumnForVerticals] =
-    useState<TableHeader[]>(verticalsColumn);
   const [tableHeaderForVerticals, setTableHeaderForVerticals] =
     useState<TableHeader[]>(verticalsFilterValue);
 
@@ -91,28 +75,25 @@ const ProductView = ({ date }: any) => {
   const accountsReport = productData?.results?.total_reports;
   const mediaBuyerReport = mediaBuyerData?.results?.media_buyer_reports;
   const verticalsReport = verticalsData?.results?.vertical_reports;
-  const handledFilter = () => {
-    setFilterVisible(true);
-  };
-  const getTableColumn = () => {
-    if (selectedIndex === 0) return tableColumnForAccounts;
-    else if (selectedIndex === 1) return tableColumnForMediaBuyer;
-    else if (selectedIndex === 2) return tableColumnForVerticals;
-
-    return tableColumnForAccounts;
-  };
-  const getTableHeader = () => {
-    if (selectedIndex === 0) return tableHeaderForAccounts;
-    if (selectedIndex === 1) return tableHeaderForMediaBuyer;
-    if (selectedIndex === 2) return tableHeaderForVerticals;
-    return tableHeaderForAccounts;
-  };
-  const setTableHeaderFn = () => {
-    if (selectedIndex === 0) return setTableHeaderForAccounts;
-    if (selectedIndex === 1) return setTableHeaderForMediaBuyer;
-    if (selectedIndex === 2) return setTableHeaderForVerticals;
-    return setTableHeaderForAccounts;
-  };
+  // const getTableColumn = () => {
+  //   if (selectedIndex === 0) return tableColumnForAccounts;
+  //   else if (selectedIndex === 1) return tableColumnForMediaBuyer;
+  //   else if (selectedIndex === 2) return tableColumnForVerticals;
+  //
+  //   return tableColumnForAccounts;
+  // };
+  // const getTableHeader = () => {
+  //   if (selectedIndex === 0) return tableHeaderForAccounts;
+  //   if (selectedIndex === 1) return tableHeaderForMediaBuyer;
+  //   if (selectedIndex === 2) return tableHeaderForVerticals;
+  //   return tableHeaderForAccounts;
+  // };
+  // const setTableHeaderFn = () => {
+  //   if (selectedIndex === 0) return setTableHeaderForAccounts;
+  //   if (selectedIndex === 1) return setTableHeaderForMediaBuyer;
+  //   if (selectedIndex === 2) return setTableHeaderForVerticals;
+  //   return setTableHeaderForAccounts;
+  // };
 
   return (
     <div className="px-2 pt-4 sm:px-0">
@@ -157,19 +138,6 @@ const ProductView = ({ date }: any) => {
                     {tab.name}
                   </Tab>
                 ))}
-                <div
-                  onClick={() => handledFilter()}
-                  className="mb-4 rounded-lg border border-gray-400 bg-white px-3 py-2"
-                >
-                  <BiFilterAlt size={18} />
-                </div>
-                <FilterWidget
-                  visible={filterVisible}
-                  setVisible={setFilterVisible}
-                  tableColumn={getTableColumn()}
-                  tableHeader={getTableHeader()}
-                  setTableHeader={setTableHeaderFn()}
-                />
               </Tab.List>
             </nav>
           </div>
@@ -190,6 +158,7 @@ const ProductView = ({ date }: any) => {
               <Accounts
                 products={products}
                 tableHeader={tableHeaderForAccounts}
+                setTableHeader={setTableHeaderForAccounts}
                 accountsReport={accountsReport}
               />
             ) : null}
@@ -200,6 +169,7 @@ const ProductView = ({ date }: any) => {
                 media_buyer={media_buyer}
                 mediaBuyerReport={mediaBuyerReport}
                 tableHeader={tableHeaderForMediaBuyer}
+                setTableHeader={setTableHeaderForMediaBuyer}
               />
             ) : null}
           </Tab.Panel>
@@ -209,6 +179,7 @@ const ProductView = ({ date }: any) => {
                 verticals={verticals}
                 verticalsReport={verticalsReport}
                 tableHeader={tableHeaderForVerticals}
+                setTableHeader={setTableHeaderForVerticals}
               />
             ) : null}
           </Tab.Panel>

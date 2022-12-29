@@ -1,5 +1,4 @@
 import { rankItem } from '@tanstack/match-sorter-utils';
-import { BiFilterAlt } from 'react-icons/bi';
 import {
   createColumnHelper,
   FilterFn,
@@ -14,15 +13,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
-import React, { Fragment, useEffect } from 'react';
+import React from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 import { DebouncedInput } from '../DebouncedInput';
 import TotalReport from '~/components/TotalReport';
 import { numberWithCommas } from '~/utils/common';
 import { Product, TableHeader, TotalReportType } from '~/utils/interface';
-import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import classNames from 'classnames';
+import { productColumn } from '~/components/ProductView/tableData';
+import FilterWidget from '~/components/FilterWidget';
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -40,19 +38,24 @@ type Props = {
   products: Product[];
   accountsReport: TotalReportType;
   tableHeader: TableHeader[];
+  setTableHeader: React.Dispatch<React.SetStateAction<TableHeader[]>>;
 };
-const Accounts = ({ products, accountsReport, tableHeader }: Props) => {
+const Accounts = ({
+  products,
+  accountsReport,
+  tableHeader,
+  setTableHeader,
+}: Props) => {
   const [selected, setSelected] = React.useState<TableHeader[]>([]);
   const columnHelper = createColumnHelper<Product>();
+  const tableColumn = productColumn;
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'total_cost',
       desc: true,
     },
   ]);
-  useEffect(() => {
-    console.log('selected', selected);
-  }, [selected]);
+
   const columns = [
     columnHelper.accessor('name', {
       header: 'Name',
@@ -179,79 +182,11 @@ const Accounts = ({ products, accountsReport, tableHeader }: Props) => {
           />
         </div>
         <div className="">
-          <Listbox value={selected} onChange={setSelected} multiple>
-            {({ open }) => (
-              <>
-                <div className="relative">
-                  <Listbox.Button className="relative flex items-center justify-center gap-2 rounded-md border border-indigo-300 bg-indigo-50 px-4 py-3 text-left  font-medium text-indigo-700 shadow-sm hover:bg-indigo-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm ">
-                    {/* <span className="block truncate">
-                      {selected.map((header) => header?.key).join(', ')}
-                    </span> */}
-                    {/* <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span> */}
-                    <BiFilterAlt className="text-indigo-800" size={18} />
-                    Filter
-                  </Listbox.Button>
-
-                  <Transition
-                    show={open}
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-10"
-                    leaveTo="opacity-25"
-                  >
-                    <Listbox.Options className="absolute right-0 z-20 mt-1 max-h-60 w-[200px] overflow-auto rounded-md bg-white py-2 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {tableHeader.map((header) => (
-                        <Listbox.Option
-                          key={header?.key}
-                          className={({ active }) =>
-                            classNames(
-                              active
-                                ? 'bg-indigo-600 text-white'
-                                : 'text-gray-900',
-                              'relative cursor-pointer select-none py-2 pl-4 pr-9',
-                            )
-                          }
-                          value={header}
-                        >
-                          {({ selected, active }) => (
-                            <>
-                              <span
-                                className={classNames(
-                                  selected ? 'font-semibold' : 'font-normal',
-                                  'block truncate',
-                                )}
-                              >
-                                {header?.label}
-                              </span>
-
-                              {selected ? (
-                                <span
-                                  className={classNames(
-                                    active ? 'text-white' : 'text-indigo-600',
-                                    'absolute inset-y-0 right-0 flex items-center pr-4',
-                                  )}
-                                >
-                                  <CheckIcon
-                                    className="h-5 w-5"
-                                    aria-hidden="true"
-                                  />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </>
-            )}
-          </Listbox>
+          <FilterWidget
+            tableColumn={tableColumn}
+            tableHeader={tableHeader}
+            setTableHeader={setTableHeader}
+          />
         </div>
       </section>
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
