@@ -87,17 +87,17 @@ export const mediaBuyerFilterValue = [
   { key: 'name', label: 'Name', order: 1 },
   { key: 'total_cost', label: 'Total Cost', order: 2 },
   { key: 'clicks', label: 'Clicks', order: 3 },
-  { key: 'conversion_rate', label: 'CVR (%)', order: 11 },
-  { key: 'cpa', label: 'CPA', order: 5 },
-  { key: 'cpm', label: 'CPM', order: 6 },
   { key: 'conversion_rate', label: 'CVR (%)', order: 7 },
+  { key: 'cpa', label: 'CPA', order: 5 },
+  { key: 'revenue', label: 'Revenue', order: 11 },
+  { key: 'profit', label: 'Profit', order: 13 },
 ];
 export const verticalsFilterValue = [
   { key: 'name', label: 'Name', order: 1 },
   { key: 'total_cost', label: 'Total Cost', order: 2 },
   { key: 'clicks', label: 'Clicks', order: 3 },
-  { key: 'conversion_rate', label: 'CVR (%)', order: 11 },
-  { key: 'cpa', label: 'CPA', order: 5 },
-  { key: 'cpm', label: 'CPM', order: 6 },
   { key: 'conversion_rate', label: 'CVR (%)', order: 7 },
+  { key: 'cpa', label: 'CPA', order: 5 },
+  { key: 'revenue', label: 'Revenue', order: 11 },
+  { key: 'profit', label: 'Profit', order: 13 },
 ];

@@ -55,13 +55,14 @@ type Props = {
 const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: 'totalCost',
+      id: 'total_cost',
       desc: true,
     },
   ]);
   const columnHelper = createColumnHelper<MediaBuyerType>();
   const columns = [
     columnHelper.accessor('name', {
+      id: 'name',
       header: 'Name',
       cell: (info) => {
         const { name } = info.row.original;
@@ -69,7 +70,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('total_cost', {
-      id: 'totalCost',
+      id: 'total_cost',
       header: 'Total Cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
@@ -78,6 +79,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('clicks', {
+      id: 'clicks',
       header: 'Clicks',
       cell: (info) => {
         const { clicks } = info.row.original;
@@ -85,6 +87,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('conversion_rate', {
+      id: 'conversion_rate',
       header: 'CVR (%)',
       cell: (info) => {
         const { conversion_rate } = info.row.original;
@@ -92,6 +95,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('cpa', {
+      id: 'cpa',
       header: 'CPA',
       cell: (info) => {
         const { cpa } = info.row.original;
@@ -99,6 +103,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('revenue', {
+      id: 'revenue',
       header: 'Revenue',
       cell: (info) => {
         const { revenue } = info.row.original;
@@ -106,6 +111,7 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
       },
     }),
     columnHelper.accessor('profit', {
+      id: 'profit',
       header: 'Profit',
       cell: (info) => {
         const { profit } = info.row.original;
@@ -175,9 +181,9 @@ const MediaBuyer = ({ media_buyer, mediaBuyerReport, tableHeader }: Props) => {
           />
         </div>
       </section>
-      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-          <div className="overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="h-[36rem] overflow-y-auto overflow-x-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <table className="table_container">
               <thead className="table_head">
                 {table.getHeaderGroups().map((headerGroup) => (
