@@ -7,6 +7,7 @@ type Params = {
   selectedTab: number;
   startDate: string;
   endDate: string;
+  accountSearchFilter: string;
 };
 type ResponseType = {
   results: {
@@ -22,6 +23,7 @@ export const getProducts = (params: Params) => {
       let paramsData = {
         start_date: params?.startDate,
         end_date: params?.endDate,
+        query: params?.accountSearchFilter,
       };
       return axios
         .get<ResponseType>(`${API_URL}/products/`, {
@@ -39,6 +41,7 @@ export const getProducts = (params: Params) => {
       params?.selectedTab,
       params?.startDate,
       params?.endDate,
+      params?.accountSearchFilter,
     ],
   };
 };

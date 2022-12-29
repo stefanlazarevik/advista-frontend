@@ -13,14 +13,16 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
+
 import { DebouncedInput } from '../DebouncedInput';
-import TotalReport from '~/components/TotalReport';
-import { numberWithCommas } from '~/utils/common';
-import { Product, TableHeader, TotalReportType } from '~/utils/interface';
-import { productColumn } from '~/components/ProductView/tableData';
+
 import FilterWidget from '~/components/FilterWidget';
+import { productColumn } from '~/components/ProductView/tableData';
+import TotalReport from '~/components/TotalReport';
+import { addDecimals, numberWithCommas } from '~/utils/common';
+import { Product, TableHeader, TotalReportType } from '~/utils/interface';
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -39,12 +41,16 @@ type Props = {
   accountsReport: TotalReportType;
   tableHeader: TableHeader[];
   setTableHeader: React.Dispatch<React.SetStateAction<TableHeader[]>>;
+  accountSearchFilter?: string;
+  setAccountSearchFilter?: React.Dispatch<React.SetStateAction<string>>;
 };
 const Accounts = ({
   products,
   accountsReport,
   tableHeader,
   setTableHeader,
+  accountSearchFilter,
+  setAccountSearchFilter,
 }: Props) => {
   const [selected, setSelected] = React.useState<TableHeader[]>([]);
   const columnHelper = createColumnHelper<Product>();
@@ -119,8 +125,6 @@ const Accounts = ({
       },
     }),
   ];
-
-  const [globalFilter, setGlobalFilter] = React.useState('');
   const checkFilterValue = (key: string) => {
     const found = tableHeader.find((header) => header?.key === key);
     return !!found;
@@ -133,7 +137,6 @@ const Accounts = ({
     },
     state: {
       sorting,
-      globalFilter,
       columnVisibility: {
         total_cost: checkFilterValue('total_cost'),
         profit: checkFilterValue('profit'),
@@ -154,7 +157,6 @@ const Accounts = ({
       },
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -164,6 +166,34 @@ const Accounts = ({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
+  const sumValues = (list: Product[]) => {
+    const sums = {};
+    list.forEach((obj) => {
+      tableHeader.some((header) => {
+        // @ts-ignore
+        // @ts-ignore
+        if (obj[header?.key] && header?.key !== 'name') {
+          // @ts-ignore
+          if (sums[header?.key]) {
+            // @ts-ignore
+            sums[header?.key] += addDecimals(obj[header?.key]);
+          } else {
+            // @ts-ignore
+            sums[header?.key] = addDecimals(obj[header?.key]);
+          }
+        }
+      });
+    });
+    return sums;
+  };
+  const totalReportData = useMemo(() => {
+    const tableData: Product[] = [];
+    table?.getRowModel()?.rows?.map((row) => {
+      tableData.push(row?.original);
+    });
+    return sumValues(tableData);
+  }, [sumValues, table]);
+  console.log({ totalReportData });
   return (
     <div className="mt-2 flex flex-col">
       <section className="mt-5 mb-4 flex w-full gap-4">
@@ -177,8 +207,12 @@ const Accounts = ({
             id="search-account"
             className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
-            value={globalFilter ?? ''}
-            onChange={(value) => setGlobalFilter(String(value))}
+            value={accountSearchFilter ?? ''}
+            onChange={(value) =>
+              setAccountSearchFilter
+                ? setAccountSearchFilter(String(value))
+                : ''
+            }
           />
         </div>
         <div className="">

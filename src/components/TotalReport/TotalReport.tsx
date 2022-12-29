@@ -1,5 +1,6 @@
 import { TableHeader, TotalReportType } from '~/utils/interface';
 import { useEffect, useState } from 'react';
+import { numberWithCommas } from '~/utils/common';
 
 type Props = {
   data: TotalReportType;
@@ -15,6 +16,7 @@ const TotalReport = ({ data, tableHeader }: Props) => {
       }
       return data;
     });
+    console.log({ data });
     setItems(data);
   }, [tableHeader]);
   const getReportByKey = (key: string) => {
@@ -23,22 +25,22 @@ const TotalReport = ({ data, tableHeader }: Props) => {
   };
   return (
     <>
-      <tfoot className='table_footer sticky bottom-0'>
-      <tr>
-        <td className=''>Total</td>
-        {items?.map((item, index) => (
-          <td className='ml-5 text-left' key={index}>
-            {item === 'total_cost' || item === 'revenue' || item === 'profit'
-              ? `${getReportByKey(item)} USD`
-              : item === 'conversion_rate'
-                ? `${getReportByKey(item)} %`
-                : `${getReportByKey(item)}`}
-          </td>
-        ))}
-        {/*{Object.keys(data).map((key) => (*/}
-        {/*  <th key={key}>{data[key]}</th>*/}
-        {/*))}*/}
-      </tr>
+      <tfoot className="table_footer sticky bottom-0">
+        <tr>
+          <td className="">Total</td>
+          {items?.map((item, index) => (
+            <td className="ml-5 text-left" key={index}>
+              {item === 'total_cost' || item === 'revenue' || item === 'profit'
+                ? `${numberWithCommas(getReportByKey(item))} USD`
+                : item === 'conversion_rate'
+                ? `${numberWithCommas(getReportByKey(item))} %`
+                : `${numberWithCommas(getReportByKey(item))}`}
+            </td>
+          ))}
+          {/*{Object.keys(data).map((key) => (*/}
+          {/*  <th key={key}>{data[key]}</th>*/}
+          {/*))}*/}
+        </tr>
       </tfoot>
     </>
   );

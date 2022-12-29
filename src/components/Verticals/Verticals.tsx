@@ -1,125 +1,3 @@
-// import {
-//   createColumnHelper,
-//   flexRender,
-//   getCoreRowModel,
-//   useReactTable,
-// } from '@tanstack/react-table';
-// import React from 'react';
-//
-
-// const Verticals = ({ verticals }: Props) => {
-//   const columnHelper = createColumnHelper<VerticalsType>();
-//   const columns = [
-//     columnHelper.display({
-//       id: 'name',
-//       header: 'Name',
-//       cell: (info) => {
-//         const { details } = info.row.original;
-//         return <div>{details?.name}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'total_cost',
-//       header: 'Total Cost',
-//       cell: (info) => {
-//         const { total_cost } = info.row.original;
-//         return <div>{total_cost}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'clicks',
-//       header: 'Clicks',
-//       cell: (info) => {
-//         const { clicks } = info.row.original;
-//         return <div>{clicks}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'conversion_rate',
-//       header: 'CVR (%)',
-//       cell: (info) => {
-//         const { conversion_rate } = info.row.original;
-//         return <div>{conversion_rate}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'cpa',
-//       header: 'CPA',
-//       cell: (info) => {
-//         const { cpa } = info.row.original;
-//         return <div>{cpa}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'revenue',
-//       header: 'Revenue',
-//       cell: (info) => {
-//         const { revenue } = info.row.original;
-//         return <div>{revenue}</div>;
-//       },
-//     }),
-//     columnHelper.display({
-//       id: 'profit',
-//       header: 'Profit',
-//       cell: (info) => {
-//         const { profit } = info.row.original;
-//         return <div>{profit}</div>;
-//       },
-//     }),
-//   ];
-//
-//   const table = useReactTable({
-//     data: verticals,
-//     columns,
-//     getCoreRowModel: getCoreRowModel(),
-//     filterFns: undefined,
-//   });
-//   return (
-//     <div className="mt-8 flex flex-col">
-//       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-//         <div className="inline-block min-w-full py-2 px-2 align-middle md:px-6 lg:px-8">
-//           <div className="overflow-x-hidden overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg h-[36rem]">
-//             <table className="table_container">
-//               <thead className="table_head">
-//                 {table.getHeaderGroups().map((headerGroup) => (
-//                   <tr key={headerGroup.id}>
-//                     {headerGroup.headers.map((header) => (
-//                       <th key={header.id}>
-//                         {header.isPlaceholder
-//                           ? null
-//                           : flexRender(
-//                               header.column.columnDef.header,
-//                               header.getContext(),
-//                             )}
-//                       </th>
-//                     ))}
-//                   </tr>
-//                 ))}
-//               </thead>
-//               <tbody className="table_body">
-//                 {table.getRowModel().rows.map((row) => (
-//                   <tr key={row.id}>
-//                     {row.getVisibleCells().map((cell) => (
-//                       <td key={cell.id}>
-//                         {flexRender(
-//                           cell.column.columnDef.cell,
-//                           cell.getContext(),
-//                         )}
-//                       </td>
-//                     ))}
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-//
-// export default Verticals;
-
 import { rankItem } from '@tanstack/match-sorter-utils';
 import {
   createColumnHelper,
@@ -162,12 +40,16 @@ type Props = {
   verticalsReport: TotalReportType;
   tableHeader: TableHeader[];
   setTableHeader: React.Dispatch<SetStateAction<TableHeader[]>>;
+  verticalsSearchFilter?: string;
+  setVerticalsSearchFilter: React.Dispatch<SetStateAction<string>>;
 };
 const Verticals = ({
   verticals,
   verticalsReport,
   tableHeader,
   setTableHeader,
+  verticalsSearchFilter,
+  setVerticalsSearchFilter,
 }: Props) => {
   const columnHelper = createColumnHelper<VerticalsType>();
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -235,7 +117,6 @@ const Verticals = ({
       },
     }),
   ];
-  const [globalFilter, setGlobalFilter] = React.useState('');
   const checkFilterValue = (key: string) => {
     const found = tableHeader.find((header) => header?.key === key);
     return !!found;
@@ -248,7 +129,6 @@ const Verticals = ({
     },
     state: {
       sorting,
-      globalFilter,
       columnVisibility: {
         total_cost: checkFilterValue('total_cost'),
         profit: checkFilterValue('profit'),
@@ -269,7 +149,6 @@ const Verticals = ({
       },
     },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -292,8 +171,8 @@ const Verticals = ({
             id="search-account"
             className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
-            value={globalFilter ?? ''}
-            onChange={(value) => setGlobalFilter(String(value))}
+            value={verticalsSearchFilter ?? ''}
+            onChange={(value) => setVerticalsSearchFilter(String(value))}
           />
         </div>
         <div className="">

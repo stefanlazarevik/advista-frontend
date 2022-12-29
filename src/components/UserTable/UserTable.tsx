@@ -22,6 +22,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 import UserProfile from '../../assets/avatar-1.jpg';
 import { API_BASE_URL } from '~/environments';
+
 const people = [
   {
     name: 'Lindsay Walton',

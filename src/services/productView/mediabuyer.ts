@@ -14,6 +14,7 @@ type ParamsType = {
   selectTab: number;
   start_date: string;
   end_date: string;
+  mediabuyerSearchFilter: string;
 };
 export const getMediaBuyer = (params: ParamsType) => {
   return {
@@ -22,6 +23,7 @@ export const getMediaBuyer = (params: ParamsType) => {
       let paramsData = {
         start_date: params?.start_date,
         end_date: params?.end_date,
+        query: params?.mediabuyerSearchFilter,
       };
       return axios
         .get<ResponseType>(`${API_URL}/partners/`, {
@@ -39,6 +41,7 @@ export const getMediaBuyer = (params: ParamsType) => {
       params?.end_date,
       params?.start_date,
       params?.selectTab,
+      params?.mediabuyerSearchFilter,
     ],
   };
 };

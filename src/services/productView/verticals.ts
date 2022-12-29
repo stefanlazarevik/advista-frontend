@@ -14,6 +14,7 @@ type ParamsType = {
   selectTab: number;
   start_date: string;
   end_date: string;
+  verticalsSearchFilter: string;
 };
 export const getVerticals = (params: ParamsType) => {
   return {
@@ -22,6 +23,7 @@ export const getVerticals = (params: ParamsType) => {
       let paramsData = {
         start_date: params?.start_date,
         end_date: params?.end_date,
+        query: params?.verticalsSearchFilter,
       };
       return axios
         .get<ResponseType>(`${API_URL}/verticals/`, {
@@ -39,6 +41,7 @@ export const getVerticals = (params: ParamsType) => {
       params?.end_date,
       params?.start_date,
       params?.selectTab,
+      params?.verticalsSearchFilter,
     ],
   };
 };

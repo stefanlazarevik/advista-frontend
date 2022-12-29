@@ -54,12 +54,16 @@ type Props = {
   mediaBuyerReport: TotalReportType;
   tableHeader: TableHeader[];
   setTableHeader: React.Dispatch<SetStateAction<TableHeader[]>>;
+  mediabuyerSearchFilter: string;
+  setMediaBuyerFilter: React.Dispatch<SetStateAction<string>>;
 };
 const MediaBuyer = ({
   media_buyer,
   mediaBuyerReport,
   tableHeader,
   setTableHeader,
+  mediabuyerSearchFilter,
+  setMediaBuyerFilter,
 }: Props) => {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -141,7 +145,6 @@ const MediaBuyer = ({
     },
     state: {
       sorting,
-      globalFilter,
       columnVisibility: {
         total_cost: checkFilterValue('total_cost'),
         profit: checkFilterValue('profit'),
@@ -185,8 +188,8 @@ const MediaBuyer = ({
             id="search-account"
             className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
-            value={globalFilter ?? ''}
-            onChange={(value) => setGlobalFilter(String(value))}
+            value={mediabuyerSearchFilter ?? ''}
+            onChange={(value) => setMediaBuyerFilter(String(value))}
           />
         </div>
         <div className="">

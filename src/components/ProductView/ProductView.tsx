@@ -17,6 +17,10 @@ import { TableHeader } from '~/utils/interface';
 
 const ProductView = ({ date }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [accountSearchFilter, setAccountSearchFilter] = useState<string>('');
+  const [mediabuyerSearchFilter, setMediaBuyerSearchFilter] =
+    useState<string>('');
+  const [verticalsSearchFilter, setVerticalSearchFilter] = useState<string>('');
   const [tableHeaderForAccounts, setTableHeaderForAccounts] = useState<
     TableHeader[]
   >(() => {
@@ -43,6 +47,7 @@ const ProductView = ({ date }: any) => {
     selectedTab: selectedIndex,
     startDate: startDate,
     endDate: endDate,
+    accountSearchFilter: accountSearchFilter,
   });
   const { data: productData } = useQuery(productKey, productFn, {
     retry: 1,
@@ -53,11 +58,13 @@ const ProductView = ({ date }: any) => {
     selectTab: selectedIndex,
     start_date: startDate,
     end_date: endDate,
+    mediabuyerSearchFilter: mediabuyerSearchFilter,
   });
   const { queryKey: verticalsKey, queryFn: verticalsFn } = getVerticals({
     selectTab: selectedIndex,
     start_date: startDate,
     end_date: endDate,
+    verticalsSearchFilter: verticalsSearchFilter,
   });
   const { data: mediaBuyerData } = useQuery(mediaBuyerKey, mediaBuyerFn, {
     retry: 1,
@@ -160,6 +167,8 @@ const ProductView = ({ date }: any) => {
                 tableHeader={tableHeaderForAccounts}
                 setTableHeader={setTableHeaderForAccounts}
                 accountsReport={accountsReport}
+                accountSearchFilter={accountSearchFilter}
+                setAccountSearchFilter={setAccountSearchFilter}
               />
             ) : null}
           </Tab.Panel>
@@ -170,6 +179,8 @@ const ProductView = ({ date }: any) => {
                 mediaBuyerReport={mediaBuyerReport}
                 tableHeader={tableHeaderForMediaBuyer}
                 setTableHeader={setTableHeaderForMediaBuyer}
+                mediabuyerSearchFilter={mediabuyerSearchFilter}
+                setMediaBuyerFilter={setMediaBuyerSearchFilter}
               />
             ) : null}
           </Tab.Panel>
@@ -180,6 +191,8 @@ const ProductView = ({ date }: any) => {
                 verticalsReport={verticalsReport}
                 tableHeader={tableHeaderForVerticals}
                 setTableHeader={setTableHeaderForVerticals}
+                verticalsSearchFilter={verticalsSearchFilter}
+                setVerticalsSearchFilter={setVerticalSearchFilter}
               />
             ) : null}
           </Tab.Panel>
