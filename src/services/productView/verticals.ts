@@ -1,8 +1,7 @@
 import { getTokenInfo } from '~/lib/auth/authlib';
 import axios from 'axios';
 import { API_URL } from '~/environments';
-import { VerticalsType } from '~/components/Verticals/Verticals';
-import { TotalReportType } from '~/utils/interface';
+import { TotalReportType, VerticalsType } from '~/utils/interface';
 
 type ResponseType = {
   results: {
