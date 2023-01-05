@@ -12,3 +12,6 @@ export const addDecimals = (num: number) => {
     return num;
   }
 };
+export const messageCharacter = (num: number) =>
+  `Must be at least ${num} characters`;
+export const TWO_CHARACTER = 'Must be at least 2 characters';

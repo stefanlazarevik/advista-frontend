@@ -11,6 +11,7 @@ import Error from '~/utils/Error';
 import { Switch } from '@headlessui/react';
 import classNames from 'classnames';
 import { API_BASE_URL } from '~/environments';
+import { messageCharacter, TWO_CHARACTER } from '~/utils/common';
 
 type Props = {
   mode: string;
@@ -25,9 +26,7 @@ export type CustomerFormType = {
   avatar?: string;
   user_mode?: number | string;
 };
-const TWO_CHARACTER = 'Must be at least 2 characters';
-export const messageCharacter = (num: number) =>
-  `Must be at least ${num} characters`;
+
 export const newCustomerSchema = z
   .object({
     username: z.string().min(2, TWO_CHARACTER),

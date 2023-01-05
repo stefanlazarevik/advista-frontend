@@ -18,6 +18,9 @@ const AsyncUserCreate = React.lazy(
 const AsyncUserManagement = React.lazy(
   () => import('../screens/UserMangement/UserManagement'),
 );
+const AsyncViewProfile = React.lazy(
+  () => import('../screens/ViewProfile/ViewProfile'),
+);
 const router = createBrowserRouter([
   {
     path: '/',
@@ -81,6 +84,16 @@ const router = createBrowserRouter([
       <React.Suspense fallback={<LoadingPage />}>
         <Layout>
           <AsyncUserEdit />
+        </Layout>
+      </React.Suspense>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <React.Suspense fallback={<LoadingPage />}>
+        <Layout>
+          <AsyncViewProfile />
         </Layout>
       </React.Suspense>
     ),
