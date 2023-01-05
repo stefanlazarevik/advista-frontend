@@ -1,4 +1,18 @@
-import { rankItem } from '@tanstack/match-sorter-utils';
+import {
+  DailyReportType,
+  Product,
+  TableHeader,
+  TotalReportType,
+} from '~/utils/interface';
+import React, { SetStateAction } from 'react';
+import {
+  dailyColumn,
+  verticalsColumn,
+} from '~/components/ProductView/tableData';
+import { DebouncedInput } from '~/components/DebouncedInput';
+import FilterWidget from '~/components/FilterWidget';
+import TotalReport from '~/components/TotalReport';
+import { numberWithCommas } from '~/utils/common';
 import {
   createColumnHelper,
   FilterFn,
@@ -12,18 +26,10 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
+import { rankItem } from '@tanstack/match-sorter-utils';
 import { clsx } from 'clsx';
-import React, { useMemo } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
-
-import { DebouncedInput } from '../DebouncedInput';
-
-import FilterWidget from '~/components/FilterWidget';
-import { productColumn } from '~/components/ProductView/tableData';
-import TotalReport from '~/components/TotalReport';
-import { addDecimals, numberWithCommas } from '~/utils/common';
-import { Product, TableHeader, TotalReportType } from '~/utils/interface';
-
+import { getDateMonthFormat } from '~/utils/dateformat';
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -36,39 +42,38 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
+
 type Props = {
-  products: Product[];
-  accountsReport: TotalReportType;
   tableHeader: TableHeader[];
-  setTableHeader: React.Dispatch<React.SetStateAction<TableHeader[]>>;
-  accountSearchFilter?: string;
-  setAccountSearchFilter?: React.Dispatch<React.SetStateAction<string>>;
+  setTableHeader: React.Dispatch<SetStateAction<TableHeader[]>>;
+  dailySearchFilter: string;
+  setDailySearchFilter: React.Dispatch<SetStateAction<string>>;
+  dailyReport: DailyReportType[];
+  dailyTotalReport: TotalReportType;
 };
-const Accounts = ({
-  products,
-  accountsReport,
+const DailyData = ({
   tableHeader,
   setTableHeader,
-  accountSearchFilter,
-  setAccountSearchFilter,
+  dailySearchFilter,
+  setDailySearchFilter,
+  dailyReport,
+  dailyTotalReport,
 }: Props) => {
-  const [selected, setSelected] = React.useState<TableHeader[]>([]);
-  const columnHelper = createColumnHelper<Product>();
-  const tableColumn = productColumn;
+  const tableColumn = dailyColumn;
+  const columnHelper = createColumnHelper<DailyReportType>();
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: 'total_cost',
       desc: true,
     },
   ]);
-
   const columns = [
-    columnHelper.accessor('name', {
-      header: 'Name',
-      id: 'name',
+    columnHelper.accessor('report_date', {
+      header: 'Date',
+      id: 'report_date',
       cell: (info) => {
-        const { name } = info.row.original;
-        return <div>{name}</div>;
+        const { report_date } = info.row.original;
+        return <div>{getDateMonthFormat(report_date)}</div>;
       },
     }),
     columnHelper.accessor('total_cost', {
@@ -76,12 +81,7 @@ const Accounts = ({
       id: 'total_cost',
       cell: (info) => {
         const { total_cost } = info.row.original;
-        return (
-          <div>
-            {numberWithCommas(total_cost)}&nbsp;
-            {info.row.original.currency}
-          </div>
-        );
+        return <div>{numberWithCommas(total_cost)}&nbsp; &nbsp; EUR</div>;
       },
     }),
     columnHelper.accessor('clicks', {
@@ -130,7 +130,7 @@ const Accounts = ({
     return !!found;
   };
   const table = useReactTable({
-    data: products,
+    data: dailyReport,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter,
@@ -179,12 +179,8 @@ const Accounts = ({
             id="search-account"
             className="block w-full rounded-md border-gray-300 bg-gray-50 py-3 shadow-sm focus:border-indigo-500 focus:bg-white focus:ring-indigo-500 sm:text-sm"
             placeholder="Search"
-            value={accountSearchFilter ?? ''}
-            onChange={(value) =>
-              setAccountSearchFilter
-                ? setAccountSearchFilter(String(value))
-                : ''
-            }
+            value={dailySearchFilter ?? ''}
+            onChange={(value) => setDailySearchFilter(String(value))}
           />
         </div>
         <div className="">
@@ -267,8 +263,11 @@ const Accounts = ({
                   </tr>
                 ))}
               </tbody>
-              {accountsReport ? (
-                <TotalReport data={accountsReport} tableHeader={tableHeader} />
+              {dailyTotalReport ? (
+                <TotalReport
+                  data={dailyTotalReport}
+                  tableHeader={tableHeader}
+                />
               ) : null}
             </table>
           </div>
@@ -293,5 +292,4 @@ const Accounts = ({
     </div>
   );
 };
-
-export default Accounts;
+export default DailyData;

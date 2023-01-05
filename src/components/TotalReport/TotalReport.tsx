@@ -16,7 +16,6 @@ const TotalReport = ({ data, tableHeader }: Props) => {
       }
       return data;
     });
-    console.log({ data });
     setItems(data);
   }, [tableHeader]);
   const getReportByKey = (key: string) => {
@@ -28,15 +27,19 @@ const TotalReport = ({ data, tableHeader }: Props) => {
       <tfoot className="table_footer sticky bottom-0">
         <tr>
           <td className="">Total</td>
-          {items?.map((item, index) => (
-            <td className="ml-5 text-left" key={index}>
-              {item === 'total_cost' || item === 'revenue' || item === 'profit'
-                ? `${numberWithCommas(getReportByKey(item))} USD`
-                : item === 'conversion_rate'
-                ? `${numberWithCommas(getReportByKey(item))} %`
-                : `${numberWithCommas(getReportByKey(item))}`}
-            </td>
-          ))}
+          {items?.map((item, index) => {
+            return (
+              <td className="ml-5 text-left" key={index}>
+                {item === 'total_cost' ||
+                item === 'revenue' ||
+                item === 'profit'
+                  ? `${numberWithCommas(getReportByKey(item))} USD`
+                  : item === 'conversion_rate'
+                  ? `${numberWithCommas(getReportByKey(item))} %`
+                  : `${numberWithCommas(getReportByKey(item))}`}
+              </td>
+            );
+          })}
           {/*{Object.keys(data).map((key) => (*/}
           {/*  <th key={key}>{data[key]}</th>*/}
           {/*))}*/}

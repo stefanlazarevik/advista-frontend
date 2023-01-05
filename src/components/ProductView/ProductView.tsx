@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Accounts from '../Accounts';
 import MediaBuyer from '~/components/Media Buyer/MediaBuyer';
 import {
+  dailyFilterValue,
   mediaBuyerFilterValue,
   productFilterValue,
   verticalsFilterValue,
@@ -14,6 +15,8 @@ import { getMediaBuyer } from '~/services/productView/mediabuyer';
 import { getProducts } from '~/services/productView/products';
 import { getVerticals } from '~/services/productView/verticals';
 import { TableHeader } from '~/utils/interface';
+import DailyData from '~/components/DailyData';
+import { getDailyReport } from '~/services/productView/dailyreports';
 
 const ProductView = ({ date }: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -21,6 +24,7 @@ const ProductView = ({ date }: any) => {
   const [mediabuyerSearchFilter, setMediaBuyerSearchFilter] =
     useState<string>('');
   const [verticalsSearchFilter, setVerticalSearchFilter] = useState<string>('');
+  const [dailySearchFilter, setDailySearchFilter] = useState<string>('');
   const [tableHeaderForAccounts, setTableHeaderForAccounts] = useState<
     TableHeader[]
   >(() => {
@@ -32,7 +36,8 @@ const ProductView = ({ date }: any) => {
 
   const [tableHeaderForVerticals, setTableHeaderForVerticals] =
     useState<TableHeader[]>(verticalsFilterValue);
-
+  const [tableHeaderForDaily, setTableHeaderForDaily] =
+    useState<TableHeader[]>(dailyFilterValue);
   function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ');
   }
@@ -41,6 +46,7 @@ const ProductView = ({ date }: any) => {
     { name: 'Accounts', href: '#', current: true, value: 0 },
     { name: 'Media Buyer', href: '#', current: false, value: 1 },
     { name: 'Verticals', href: '#', current: false, value: 2 },
+    { name: 'Daily', href: '#', current: false, value: 3 },
   ];
   const { startDate, endDate } = date;
   const { queryKey: productKey, queryFn: productFn } = getProducts({
@@ -76,12 +82,24 @@ const ProductView = ({ date }: any) => {
     keepPreviousData: true,
     enabled: selectedIndex === 2,
   });
+  const { queryKey: dailyReportKey, queryFn: dailyReportFn } = getDailyReport({
+    selectedTab: selectedIndex,
+    startDate: startDate,
+    endDate: endDate,
+    dailySearchFilter: dailySearchFilter,
+  });
+  const { data: dailyReportData } = useQuery(dailyReportKey, dailyReportFn, {
+    retry: 1,
+    enabled: selectedIndex === 3,
+  });
   const media_buyer = mediaBuyerData?.results?.data;
   const products = productData?.results?.data;
   const verticals = verticalsData?.results?.data;
   const accountsReport = productData?.results?.total_reports;
   const mediaBuyerReport = mediaBuyerData?.results?.media_buyer_reports;
   const verticalsReport = verticalsData?.results?.vertical_reports;
+  const dailyReport = dailyReportData?.data;
+  const dailyTotalReport = dailyReportData?.daily_total_report;
   // const getTableColumn = () => {
   //   if (selectedIndex === 0) return tableColumnForAccounts;
   //   else if (selectedIndex === 1) return tableColumnForMediaBuyer;
@@ -193,6 +211,18 @@ const ProductView = ({ date }: any) => {
                 setTableHeader={setTableHeaderForVerticals}
                 verticalsSearchFilter={verticalsSearchFilter}
                 setVerticalsSearchFilter={setVerticalSearchFilter}
+              />
+            ) : null}
+          </Tab.Panel>
+          <Tab.Panel tabIndex={-1}>
+            {dailyReport && dailyTotalReport && setTableHeaderForDaily ? (
+              <DailyData
+                tableHeader={tableHeaderForDaily}
+                setTableHeader={setTableHeaderForDaily}
+                dailySearchFilter={dailySearchFilter}
+                setDailySearchFilter={setDailySearchFilter}
+                dailyReport={dailyReport}
+                dailyTotalReport={dailyTotalReport}
               />
             ) : null}
           </Tab.Panel>

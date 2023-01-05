@@ -86,3 +86,18 @@ export type TotalReportType = {
   profit?: number;
   roi?: number;
 };
+export type DailyReportType = {
+  report_date: string;
+  total_cost: number;
+  clicks: number;
+  conversions: number;
+  impressions: number;
+  revenue: number;
+  conversion_rate: number;
+  ctr: number;
+  cpm: number;
+  cpc: number;
+  cpa: number;
+  profit: number;
+  roi: number;
+};
