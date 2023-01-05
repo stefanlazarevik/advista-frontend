@@ -61,12 +61,7 @@ const DailyData = ({
 }: Props) => {
   const tableColumn = dailyColumn;
   const columnHelper = createColumnHelper<DailyReportType>();
-  const [sorting, setSorting] = React.useState<SortingState>([
-    {
-      id: 'total_cost',
-      desc: true,
-    },
-  ]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const columns = [
     columnHelper.accessor('report_date', {
       header: 'Date',
