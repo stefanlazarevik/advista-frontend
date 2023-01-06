@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 type Props = {
   imageLink?: string;
-  onChange?: (e: any) => {};
+  onChange?: (e: any) => void;
 };
 const ImageUpload = ({ imageLink, onChange }: Props) => {
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(imageLink);
