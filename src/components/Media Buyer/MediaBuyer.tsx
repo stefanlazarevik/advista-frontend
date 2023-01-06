@@ -123,6 +123,14 @@ const MediaBuyer = ({
         return <div>{numberWithCommas(revenue)} USD</div>;
       },
     }),
+    columnHelper.accessor('roi', {
+      id: 'roi',
+      header: 'ROI (%)',
+      cell: (info) => {
+        const { roi } = info.row.original;
+        return <div>{numberWithCommas(roi)} %</div>;
+      },
+    }),
     columnHelper.accessor('profit', {
       id: 'profit',
       header: 'Profit',
@@ -152,6 +160,7 @@ const MediaBuyer = ({
         clicks: checkFilterValue('clicks'),
         cpa: checkFilterValue('cpa'),
         conversion_rate: checkFilterValue('conversion_rate'),
+        roi: checkFilterValue('roi'),
       },
     },
     initialState: {
@@ -162,6 +171,7 @@ const MediaBuyer = ({
         conversion_rate: checkFilterValue('conversion_rate'),
         clicks: checkFilterValue('clicks'),
         cpa: checkFilterValue('cpa'),
+        roi: checkFilterValue('roi'),
       },
     },
     onSortingChange: setSorting,

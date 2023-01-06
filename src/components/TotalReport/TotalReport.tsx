@@ -34,7 +34,7 @@ const TotalReport = ({ data, tableHeader }: Props) => {
                 item === 'revenue' ||
                 item === 'profit'
                   ? `${numberWithCommas(getReportByKey(item))} USD`
-                  : item === 'conversion_rate'
+                  : item === 'conversion_rate' || item === 'roi'
                   ? `${numberWithCommas(getReportByKey(item))} %`
                   : `${numberWithCommas(getReportByKey(item))}`}
               </td>
